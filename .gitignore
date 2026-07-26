@@ -1,0 +1,29 @@
+# Caches
+__pycache__/
+.pickles/
+*.pickle
+.pytest_cache/
+.tox/
+.venv/
+.venv2/
+
+# Build artifacts
+dist/
+dist2/
+build/
+*.egg-info/
+
+# Env
+.env
+.DS_Store
+dfm_sp/.DS_Store
+
+# Large datasets
+data/
+*.xlsx
+*.xls
+*.csv
+*.html 
+
+TransformedData.xlsx
+*.pickle
