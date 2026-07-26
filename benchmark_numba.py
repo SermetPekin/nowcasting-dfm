@@ -1,4 +1,11 @@
 """
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
+"""
 Numba Benchmark
 ===============
 Compares the pure-Python and Numba-JIT Kalman filter implementations:
@@ -21,6 +28,7 @@ from dfm_sp.core.dfm import run_kalman_filter_loop, run_kalman_filter_loop_pytho
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_inputs(nobs: int, m: int = 5, k: int = 10, seed: int = 42):
     rng = np.random.default_rng(seed)
@@ -52,14 +60,15 @@ def _time(fn, *args, runs: int = 5) -> float:
 # 1. Correctness check
 # ---------------------------------------------------------------------------
 
+
 def check_correctness():
     print("=" * 60)
     print("1. CORRECTNESS CHECK")
     print("=" * 60)
     nobs, m, Y, A, C, Q, R, Zu, Vu = _make_inputs(nobs=200)
 
-    res_py  = run_kalman_filter_loop_python(nobs, m, Y, A, C, Q, R, Zu.copy(), Vu.copy())
-    res_jit = run_kalman_filter_loop      (nobs, m, Y, A, C, Q, R, Zu.copy(), Vu.copy())
+    res_py = run_kalman_filter_loop_python(nobs, m, Y, A, C, Q, R, Zu.copy(), Vu.copy())
+    res_jit = run_kalman_filter_loop(nobs, m, Y, A, C, Q, R, Zu.copy(), Vu.copy())
 
     labels = ["Zm", "Vm", "ZmU", "VmU", "loglik"]
     all_ok = True
@@ -82,6 +91,7 @@ def check_correctness():
 # 2. Timing benchmark
 # ---------------------------------------------------------------------------
 
+
 def run_benchmark():
     print("=" * 60)
     print("2. TIMING BENCHMARK  (median of 5 runs each)")
@@ -96,8 +106,8 @@ def run_benchmark():
     for nobs in [100, 500, 1_000, 5_000, 10_000]:
         args = _make_inputs(nobs=nobs)
 
-        t_py  = _time(run_kalman_filter_loop_python, *args)
-        t_jit = _time(run_kalman_filter_loop,        *args)
+        t_py = _time(run_kalman_filter_loop_python, *args)
+        t_jit = _time(run_kalman_filter_loop, *args)
         speedup = t_py / t_jit if t_jit > 0 else float("inf")
 
         print(f"  {nobs:>6,}  {t_py:>12.4f}  {t_jit:>12.4f}  {speedup:>9.1f}x")
@@ -108,6 +118,7 @@ def run_benchmark():
 # ---------------------------------------------------------------------------
 # 3. Full DFM run comparison (Options-level)
 # ---------------------------------------------------------------------------
+
 
 def run_full_dfm_benchmark():
     print("=" * 60)
@@ -120,7 +131,7 @@ def run_full_dfm_benchmark():
             vintage="2016-06-29",
             country="US",
             spec_file_name="Spec_US_example.xls",
-            max_iter=50,        # keep short for benchmark purposes
+            max_iter=50,  # keep short for benchmark purposes
             threshold=1e-3,
             use_cache=False,
             use_numba=True,
@@ -147,8 +158,10 @@ def run_full_dfm_benchmark():
         ll_numba = res_numba.result["loglik"][-1]
         ll_plain = res_plain.result["loglik"][-1]
         ok = np.isclose(ll_numba, ll_plain, rtol=1e-5)
-        print(f"  loglik match    : {'PASS' if ok else 'FAIL'}  "
-              f"(numba={ll_numba:.6f}, plain={ll_plain:.6f})")
+        print(
+            f"  loglik match    : {'PASS' if ok else 'FAIL'}  "
+            f"(numba={ll_numba:.6f}, plain={ll_plain:.6f})"
+        )
     except Exception as exc:
         print(f"  Skipped — data not found or error: {exc}")
     print()

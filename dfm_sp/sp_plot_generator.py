@@ -1,3 +1,11 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
+
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 from dfm_sp.sp_plots import (

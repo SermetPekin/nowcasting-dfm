@@ -1,3 +1,12 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2018, Federal Reserve Bank of New York (original MATLAB implementation by Eric Qian and Brandyn Bok)
+Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated with FRBNY, https://github.com/MajesticKhan/Nowcasting-Python)
+
+"""
+
+
 # -------------------------------------------------Libraries
 import numpy as np
 import pandas as pd

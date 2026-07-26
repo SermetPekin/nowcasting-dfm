@@ -1,3 +1,10 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
 import pytest
 from pathlib import Path
 from dfm_sp.sp_classes import Options

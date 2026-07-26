@@ -1,3 +1,4 @@
+
 import os
 import pickle
 from dfm_sp.core.load_data import load_data
@@ -20,7 +21,7 @@ print(f"Loading Base Line Model for vintage: {vintage_old}")
 Spec, X_old, _, Z_old = run_with_options(options_baseline)
 
 ResObject = run(X_old, Spec, options_baseline)
-Res = ResObject.result  
+Res = ResObject.result
 
 print(f"Loading Updated Data for vintage: {vintage_new}")
 datafile_new = os.path.join("data", options_baseline.country, vintage_new + ".xls")

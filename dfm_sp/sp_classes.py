@@ -1,3 +1,11 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
+
 from dataclasses import dataclass
 from typing import Any
 from pathlib import Path

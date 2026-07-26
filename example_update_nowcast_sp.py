@@ -2,7 +2,7 @@ from dfm_sp import sp_update_nowcast, Options
 
 series = "GDPC1"
 period = "2016q4"
-# 
+#
 vintage_old = "2016-12-16"
 vintage_new = "2016-12-23"
 sample_start = "2000-01-01"
@@ -11,7 +11,6 @@ spec_file_name = "Spec_US_example.xls"
 max_iter = 5000
 
 options_baseline = Options(
-
     vintage=vintage_old,
     max_iter=max_iter,
     spec_file_name=spec_file_name,

@@ -1,3 +1,10 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
 from pathlib import Path
 import os
 from datetime import datetime

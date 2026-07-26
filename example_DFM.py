@@ -30,7 +30,9 @@ Spec, X, Time, Z = run_with_options(options)
 summarize(X, Time, Spec)
 
 # -------------------------------------------------Plot raw vs transformed data for a single series
-fig_transformed = plot_transformed_data_one(Spec, X, Z, Time, series_id="INDPRO", show=False)
+fig_transformed = plot_transformed_data_one(
+    Spec, X, Z, Time, series_id="INDPRO", show=False
+)
 # fig_transformed.show()
 
 # -------------------------------------------------Run dynamic factor model (DFM)
@@ -46,5 +48,7 @@ fig_common = plot_common(ResObject, Time, series_id="INDPRO", show=False)
 # fig_common.show()
 
 # -------------------------------------------------Plot projection of common factor onto series of interest
-fig_projection = plot_projection_x_over_y(ResObject, X, Z, Time, series=["PAYEMS", "GDPC1"], show=False)
+fig_projection = plot_projection_x_over_y(
+    ResObject, X, Z, Time, series=["PAYEMS", "GDPC1"], show=False
+)
 fig_projection.show()

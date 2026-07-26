@@ -1,3 +1,10 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
 import urllib.request
 import json
 from pathlib import Path
@@ -23,7 +30,9 @@ def _list_github_files(remote_path: str, proxy: str | None = None) -> list[dict]
         return json.loads(resp.read().decode())
 
 
-def _download_file(download_url: str, local_path: Path, proxy: str | None = None) -> None:
+def _download_file(
+    download_url: str, local_path: Path, proxy: str | None = None
+) -> None:
     """Download a file using the URL provided directly by the GitHub API."""
     local_path.parent.mkdir(parents=True, exist_ok=True)
     req = urllib.request.Request(download_url, headers={"User-Agent": "dfm_sp"})

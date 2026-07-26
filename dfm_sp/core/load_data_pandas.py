@@ -1,3 +1,11 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
+
 import pandas as pd
 import numpy as np
 

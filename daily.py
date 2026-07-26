@@ -1,3 +1,10 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
+
+"""
+
 from dfm_sp import Path, Options, daily_report
 
 out_folder = Path(".") / "out "
