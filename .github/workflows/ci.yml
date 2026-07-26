@@ -18,27 +18,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install uv
+      - name: Install uv and set up Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
           enable-cache: true
+          python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
 
-      - name: Create virtual environment and install dependencies
-        run: |
-          uv venv
-          source .venv/bin/activate
-          uv sync --all-extras --dev
-          uv pip install pytest tox
-
-      - name: Run Tox for testing
-        run: |
-          source .venv/bin/activate
-          # We use tox to run the test suite, we instruct it to use the current python version
-          tox -e py$(echo ${{ matrix.python-version }} | tr -d .)
+      - name: Run tests
+        run: uv run pytest dfm_sp/tests/ -v
 
   build:
     name: Build package

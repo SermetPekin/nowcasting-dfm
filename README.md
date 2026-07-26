@@ -1,3 +1,11 @@
+
+
+[![PyPI](https://img.shields.io/pypi/v/nowcasting-dfm)](https://img.shields.io/pypi/v/nowcasting-dfm) 
+![t](https://img.shields.io/badge/status-maintained-yellow.svg) [![](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/) 
+
+
+
+
 # nowcasting-dfm
 
 A Python implementation of the Dynamic Factor Model (DFM) for macroeconomic nowcasting, extending the FRBNY framework (Qian & Bok) with a modern API: real-time vintage management, Kalman-based news decomposition, optional Numba acceleration, caching, and interactive Plotly visualizations.
