@@ -1,10 +1,7 @@
 
 
 [![PyPI](https://img.shields.io/pypi/v/nowcasting-dfm)](https://img.shields.io/pypi/v/nowcasting-dfm) 
-![t](https://img.shields.io/badge/status-maintained-yellow.svg) [![](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/) 
-
-
-[![CI / CD](https://github.com/SermetPekin/nowcasting-dfm/actions/workflows/ci.yml/badge.svg?1)](https://github.com/SermetPekin/nowcasting-dfm/actions/workflows/ci.yml?1)
+![t](https://img.shields.io/badge/status-maintained-yellow.svg) [![](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/) [![CI / CD](https://github.com/SermetPekin/nowcasting-dfm/actions/workflows/ci.yml/badge.svg?1)](https://github.com/SermetPekin/nowcasting-dfm/actions/workflows/ci.yml?1)
 
 
 
