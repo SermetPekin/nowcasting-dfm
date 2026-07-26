@@ -61,7 +61,7 @@ result["fig"].show()  # interactive Plotly waterfall chart
 *   **Numba JIT Acceleration:** The core Expectation-Maximization algorithm and Kalman Filter transition loop have been rewritten for ahead-of-time C compilation via `@numba.jit`. This drastically cuts execution time for extensive parameter searches (`max_iter` 5000+).
 *   **Automated Econometric Validation:** Integrated Augmented Dickey-Fuller (ADF) testing via `statsmodels` to evaluate series stationarity post-transformation, directly guarding against feeding non-stationary data into the DFM.
 *   **Testing Suite:** A comprehensive `pytest` suite enforces the mathematical integrity of the Numba translation against the pure Python implementation, particularly concerning NaN propagation ("ragged edges") inherent in raw macroeconomic releases.
-*   **Dependency Management:** Migrated to Python 3.14+ utilizing `uv` and `pyproject.toml` for hermetic environment resolution.
+*   **Dependency Management:** Packaged with `pyproject.toml` and a `hatchling` build backend; supports Python 3.10+.
 *   **HTML Reporting:** Automatically generates standalone Plotly HTML reports containing Factor Contributions, Likelihood optimizations, and Model loadings.
 *   **"News" Attribution Waterfalls:** Provides native bindings (`sp_news.py`) to dissect the mathematical drivers behind week-over-week DFM forecast changes. Generates Plotly Waterfall charts bridging `Actual vs Expected` impacts weighted by the Kalman gain.
 *   **Pseudo-Real-Time Synthesizer:** Includes `sp_vintage_generator.py` for automatically simulating historical "ragged-edge" data matrices from a single modern dataset. Maps execution algorithms (e.g. `1st Friday of the Month`, `15th of the Month`) to dynamically blind data that had not yet been published, allowing mathematically un-cheated backtesting independent of the FRED ALFRED API.
@@ -69,12 +69,13 @@ result["fig"].show()  # interactive Plotly waterfall chart
 ## Repository Structure
 
 * `data/` : Example US macro series retrieved from [FRED](https://fred.stlouisfed.org/).
-* `dfm_sp/` : Core package module encompassing the execution engines and analytics.
-    * `Functions/` : Kalman Filtering, Spline imputation, and EM-Step mathematics.
+* `dfm_sp/` : Core package encompassing the execution engines and analytics.
+    * `core/` : Kalman filtering, spline imputation, EM-step mathematics, and data loaders.
     * `tests/` : Component tests simulating missing economic data and ragged tails.
+* `examples/` : Ready-to-run scripts and configuration examples (CSV pipeline, custom config, spec generation).
+* `notebooks/` : Jupyter notebooks covering classic usage, news waterfalls, pseudo-vintages, and weekly integration.
 * `main.py` : Execution script illustrating the estimation of a standard panel and generating visualization artifacts.
 * `example_Nowcast.py` : Demonstration of out-of-sample prediction mechanics (e.g., real GDP growth).
-* `Spec_US_example.xls` : Model specification configurations, dictating series transformations and blocking parameters for mixed-frequency analysis.
 
 ## Attribution & Notice
 
