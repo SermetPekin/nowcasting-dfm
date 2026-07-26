@@ -13,7 +13,7 @@ pip install nowcasting-dfm
 For Jupyter notebook support:
 
 ```bash
-pip install nowcasting-dfm[all]
+pip install "nowcasting-dfm[all]"
 ```
 
 ## Quick Start
