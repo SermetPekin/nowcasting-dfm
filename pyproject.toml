@@ -1,0 +1,89 @@
+[project]
+name = "nowcasting-dfm"
+version = "0.1.3"
+description = "Macroeconomic nowcasting via Dynamic Factor Models (DFM), extending the FRBNY framework (Qian & Bok) with a modern Python API: real-time vintage management, Kalman-based news decomposition, optional Numba acceleration, caching, and interactive Plotly visualizations."
+authors = [{ name = "Sermet Pekin", email = "sermet.pekin@gmail.com" }]
+readme = "README.md"
+license = { text = "BSD-3-Clause" }
+requires-python = ">=3.10"
+keywords = ["nowcasting", "macroeconomics", "econometrics", "dynamic-factor-model", "kalman-filter", "em-algorithm", "forecast"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+]
+
+dependencies = [
+    "numba>=0.66.0",
+    "numpy>=1.24.0,<3",
+    "openpyxl>=3.1.5",
+    "pandas>=2.0.0",
+    "plotly>=5.18.0",
+    "scipy>=1.11.0",
+    "statsmodels>=0.14.0",
+    "xlrd>=2.0.2",
+]
+
+[project.optional-dependencies]
+all = [
+    "ipykernel>=7.3.0",
+    "nbformat>=5.10.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/SermetPekin/nowcasting-dfm"
+Issues = "https://github.com/SermetPekin/nowcasting-dfm/issues"
+
+[dependency-groups]
+dev = [
+    "black>=24.0.0",
+    "pytest>=8.0.0",
+    "ruff>=0.1.0",
+    "tox>=4.11.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "dfm_sp/**/*.py",
+    "data/**",
+    "Spec_US_example.xls",
+    "README.md",
+    "LICENSE",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["dfm_sp"]
+artifacts = [
+    "data/**",
+    "Spec_US_example.xls",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | \.venv2
+  | build
+  | dist
+  | dist2 
+)/
+'''
