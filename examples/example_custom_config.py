@@ -1,7 +1,7 @@
 from pathlib import Path
 import numpy as np
 
-from dfm_sp import SpecConfig, load_spec
+from dfm_sp import SpecConfig, LoadSpec
 from dfm_sp import load_data
 from dfm_sp import dfm
 from dfm_sp.sp_utils import get_latest
@@ -42,7 +42,7 @@ def run_custom_spec_example():
     )
 
     # Compile the config into the structured object the DFM algorithm expects
-    spec = load_spec(my_config)
+    spec = LoadSpec(my_config)
 
     print("\n2. Loading Raw Data against Custom Spec...")
     # Locate the latest vintage data to test against

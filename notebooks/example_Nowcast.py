@@ -1,7 +1,7 @@
 import os
 import pickle
 from dfm_sp import load_data
-from dfm_sp import load_spec
+from dfm_sp import LoadSpec
 from dfm_sp import update_nowcast
 from dfm_sp import Options
 from dfm_sp import run_with_options, run

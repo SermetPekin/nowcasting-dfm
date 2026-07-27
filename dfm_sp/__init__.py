@@ -14,7 +14,7 @@ from dfm_sp.sp_daily import daily_report
 
 # Exposed Public API (Easier names)
 from dfm_sp.sp_classes import Options, ResultObject
-from dfm_sp.core.load_spec import SpecConfig, load_spec
+from dfm_sp.core.load_spec import SpecConfig, LoadSpec, load_spec  # load_spec is a backward-compat alias
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
 from dfm_sp.core.summarize import summarize
@@ -55,7 +55,8 @@ __all__ = [
     "FixedDayRule",
     "WeekdayRule",
     # Classic Endpoints
-    "load_spec",
+    "LoadSpec",
+    "load_spec",  # backward-compat alias for LoadSpec
     "load_data",
     "dfm",
     "summarize",

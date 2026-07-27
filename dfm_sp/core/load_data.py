@@ -13,7 +13,7 @@ import os
 import warnings
 from typing import Tuple, Optional, Union
 from pathlib import Path
-from .load_spec import load_spec, SpecConfig
+from .load_spec import LoadSpec, SpecConfig
 
 
 def check_stationarity(series: np.ndarray, name: str):
@@ -52,7 +52,7 @@ def check_stationarity(series: np.ndarray, name: str):
 
 def load_data(
     datafile: Union[str, Path],
-    Spec: Union["load_spec", SpecConfig],
+    Spec: Union["LoadSpec", SpecConfig],
     sample: Optional[list] = None,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """

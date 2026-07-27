@@ -16,7 +16,7 @@ from dfm_sp.sp_classes import Options
 from dfm_sp.sp_run import run, run_with_options
 from dfm_sp.sp_news import plot_news_waterfall
 from dfm_sp.sp_cache import CacheHandler
-from dfm_sp.core.load_spec import load_spec
+from dfm_sp.core.load_spec import LoadSpec
 
 CACHE_DIR = ".pickles"
 cache_ = CacheHandler(cache_dir=CACHE_DIR)

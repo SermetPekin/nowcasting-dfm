@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from dfm_sp import SpecConfig, load_spec
+from dfm_sp import SpecConfig, LoadSpec
 from dfm_sp.core.load_data_pandas import load_data_pandas
 from dfm_sp import dfm
 from dfm_sp.sp_utils import get_latest
@@ -43,7 +43,7 @@ def run_pandas_spec_example():
     )
 
     # Compile the config into the structured object the DFM algorithm expects
-    spec = load_spec(my_config)
+    spec = LoadSpec(my_config)
 
     print(
         "\n2. Connecting a raw Pandas DataFrame against Custom Spec (Bypassing File Loading)..."

@@ -17,12 +17,12 @@ from scipy.linalg import block_diag
 
 # -------------------------------------------------Dynamic Factor Modeling functions
 from typing import Dict, Any, Union
-from .load_spec import load_spec, SpecConfig
+from .load_spec import LoadSpec, SpecConfig
 
 
 def dfm(
     X: np.ndarray,
-    Spec: Union["load_spec", SpecConfig],
+    Spec: Union["LoadSpec", SpecConfig],
     threshold: float = 1e-5,
     max_iter: int = 5000,
     use_numba=True,

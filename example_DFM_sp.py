@@ -33,7 +33,7 @@ summarize(X, Time, Spec)
 fig_transformed = plot_transformed_data_one(
     Spec, X, Z, Time, series_id="INDPRO", show=False
 )
-# fig_transformed.show()
+fig_transformed.show()
 
 # -------------------------------------------------Run dynamic factor model (DFM)
 print("Running Dynamic Factor Model (DFM)...")
@@ -41,11 +41,11 @@ ResObject = run(X, Spec, options)
 
 # -------------------------------------------------Plot LogLik convergence
 fig_loglik = plot_loglik(ResObject, Time, show=False)
-# fig_loglik.show()
+fig_loglik.show()
 
 # -------------------------------------------------Plot common factor and standardized data
 fig_common = plot_common(ResObject, Time, series_id="INDPRO", show=False)
-# fig_common.show()
+fig_common.show()
 
 # -------------------------------------------------Plot projection of common factor onto series of interest
 fig_projection = plot_projection_x_over_y(

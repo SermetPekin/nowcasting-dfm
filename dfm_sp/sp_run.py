@@ -20,7 +20,7 @@ import numpy as np
 
 # ================================================================================
 # DFM Spkn edition
-from dfm_sp.core.load_spec import load_spec
+from dfm_sp.core.load_spec import LoadSpec
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
 from dfm_sp.core.summarize import summarize
@@ -68,7 +68,7 @@ def run(X, Spec, run_options: Options = None) -> ResultObject:
 
 
 def run_with_options(options: Options, verbose = True):
-    Spec : load_spec = load_spec(options.spec_file_name)
+    Spec : LoadSpec = LoadSpec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
     )

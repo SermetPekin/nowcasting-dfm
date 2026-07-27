@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from dfm_sp import load_spec
+from dfm_sp import LoadSpec
 from dfm_sp import load_data
 from dfm_sp import dfm
 from dfm_sp.sp_utils import get_latest
@@ -8,7 +8,7 @@ from dfm_sp.sp_utils import get_latest
 
 def main():
     # 1. Provide CSV Spec
-    spec = load_spec("Spec_US_example.csv")
+    spec = LoadSpec("Spec_US_example.csv")
 
     # Generate a matching CSV for the data as well to test fully CSV pipeline
     data_folder = Path("data/US")

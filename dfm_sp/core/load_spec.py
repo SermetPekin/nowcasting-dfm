@@ -29,7 +29,7 @@ class SpecConfig:
     block_names: List[str]
     blocks_matrix: np.ndarray
 
-class load_spec:
+class LoadSpec:
 
     """
     Load model specification for a dynamic factor model (DFM).
@@ -47,16 +47,15 @@ class load_spec:
     """
 
     def __init__(self, spec_input: Union[str, Path, SpecConfig]):
-        
-        self._SeriesID = None
-        self._SeriesName = None
-        self._Frequency = None
-        self._Units = None
-        self._Transformation = None
-        self._Category = None
-        self._Blocks = None
-        self._BlockNames = None
-        self._UnitsTransformed = None
+        self._SeriesID: Optional[np.ndarray] = None
+        self._SeriesName: Optional[np.ndarray] = None
+        self._Frequency: Optional[np.ndarray] = None
+        self._Units: Optional[np.ndarray] = None
+        self._Transformation: Optional[np.ndarray] = None
+        self._Category: Optional[np.ndarray] = None
+        self._Blocks: Optional[np.ndarray] = None
+        self._BlockNames: Optional[List[str]] = None
+        self._UnitsTransformed: Optional[np.ndarray] = None
         
         if isinstance(spec_input, (str, Path)):
             self._init_from_file(str(spec_input))
@@ -100,9 +99,17 @@ class load_spec:
         freq_counts = pd.Series(self.Frequency).value_counts().to_dict()
         return ", ".join(f"{freq}: {count}" for freq, count in freq_counts.items())
 
+    def _guard(self, name: str, value: Optional[np.ndarray]) -> np.ndarray:
+        if value is None:
+            raise RuntimeError(
+                f"LoadSpec.{name} is None — the spec was not fully initialised. "
+                "Check that your spec file contains the required columns and passes validation."
+            )
+        return value
+
     @property
     def SeriesID(self) -> np.ndarray:
-        return self._SeriesID
+        return self._guard("SeriesID", self._SeriesID)
 
     @SeriesID.setter
     def SeriesID(self, value: np.ndarray) -> None:
@@ -110,7 +117,7 @@ class load_spec:
 
     @property
     def SeriesName(self) -> np.ndarray:
-        return self._SeriesName
+        return self._guard("SeriesName", self._SeriesName)
 
     @SeriesName.setter
     def SeriesName(self, value: np.ndarray) -> None:
@@ -118,7 +125,7 @@ class load_spec:
 
     @property
     def Frequency(self) -> np.ndarray:
-        return self._Frequency
+        return self._guard("Frequency", self._Frequency)
 
     @Frequency.setter
     def Frequency(self, value: np.ndarray) -> None:
@@ -126,7 +133,7 @@ class load_spec:
 
     @property
     def Units(self) -> np.ndarray:
-        return self._Units
+        return self._guard("Units", self._Units)
 
     @Units.setter
     def Units(self, value: np.ndarray) -> None:
@@ -134,7 +141,7 @@ class load_spec:
 
     @property
     def Transformation(self) -> np.ndarray:
-        return self._Transformation
+        return self._guard("Transformation", self._Transformation)
 
     @Transformation.setter
     def Transformation(self, value: np.ndarray) -> None:
@@ -142,7 +149,7 @@ class load_spec:
 
     @property
     def Category(self) -> np.ndarray:
-        return self._Category
+        return self._guard("Category", self._Category)
 
     @Category.setter
     def Category(self, value: np.ndarray) -> None:
@@ -150,7 +157,7 @@ class load_spec:
 
     @property
     def Blocks(self) -> np.ndarray:
-        return self._Blocks
+        return self._guard("Blocks", self._Blocks)
 
     @Blocks.setter
     def Blocks(self, value: np.ndarray) -> None:
@@ -158,6 +165,10 @@ class load_spec:
 
     @property
     def BlockNames(self) -> List[str]:
+        if self._BlockNames is None:
+            raise RuntimeError(
+                "LoadSpec.BlockNames is None — the spec was not fully initialised."
+            )
         return self._BlockNames
 
     @BlockNames.setter
@@ -166,7 +177,7 @@ class load_spec:
 
     @property
     def UnitsTransformed(self) -> np.ndarray:
-        return self._UnitsTransformed
+        return self._guard("UnitsTransformed", self._UnitsTransformed)
 
     @UnitsTransformed.setter
     def UnitsTransformed(self, value: np.ndarray) -> None:
@@ -243,3 +254,7 @@ class load_spec:
                     "UnitsTransformed": self.UnitsTransformed,
                 })
             )
+
+
+# Backward-compatible alias — existing code using `load_spec` continues to work.
+load_spec = LoadSpec
