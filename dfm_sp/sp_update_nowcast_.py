@@ -13,7 +13,7 @@ import pandas as pd
 from dfm_sp.core.load_data import load_data, sortData
 from dfm_sp.core.update_Nowcast import update_nowcast
 from dfm_sp.sp_classes import Options
-from dfm_sp.sp_run import run, run_with_options
+from dfm_sp.sp_run import run, get_with_options
 from dfm_sp.sp_news import plot_news_waterfall
 from dfm_sp.sp_cache import CacheHandler
 from dfm_sp.core.load_spec import LoadSpec
@@ -35,12 +35,12 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
 
     # Use the proper API
     print(f"Executing Baseline for {vintage_old}...")
-    Spec, X_old, _Time_old, _Z_old = run_with_options(options_baseline)
+    Spec, X_old, _Time_old, _Z_old = get_with_options(options_baseline)
     ResObject_base = run(X_old, Spec, options_baseline)
     Res_base = ResObject_base.result
 
     print(f"Loading New Data Vintage for {vintage_new}...")
-    Spec_new, X_new, Time, _Z_new = run_with_options(options_new)
+    Spec_new, X_new, Time, _Z_new = get_with_options(options_new)
 
     y_old, y_new, news_table, data_released = update_nowcast(
         X_old, X_new, Time, Spec, Res_base, series, period, vintage_old, vintage_new

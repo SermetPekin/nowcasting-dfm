@@ -67,7 +67,7 @@ def run(X, Spec, run_options: Options = None) -> ResultObject:
     return res_object
 
 
-def run_with_options(options: Options, verbose = True):
+def get_with_options(options: Options, verbose = True):
     Spec : LoadSpec = LoadSpec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
@@ -79,9 +79,13 @@ def run_with_options(options: Options, verbose = True):
         summarize(X, Time, Spec)
     return Spec, X, Time, Z
 
+def run_with_options(options: Options, verbose = True) -> ResultObject:
+    Spec, X, Time, Z = get_with_options(options, verbose)
+    ResObject: ResultObject = run(X, Spec, options)
+    return ResObject
 
 def plot_with_options(options: Options):
-    Spec, X, Time, Z = run_with_options(options)
+    Spec, X, Time, Z = get_with_options(options)
     plot_transformed_data(Spec, X, Z, Time, options.plot1_series)
     ResObject: ResultObject = run(X, Spec, options)
     plot_loglik(ResObject, Time)

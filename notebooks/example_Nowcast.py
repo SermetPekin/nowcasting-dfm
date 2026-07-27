@@ -4,7 +4,7 @@ from dfm_sp import load_data
 from dfm_sp import LoadSpec
 from dfm_sp import update_nowcast
 from dfm_sp import Options
-from dfm_sp import run_with_options, run
+from dfm_sp import get_with_options, run
 
 series = "GDPC1"  # Nowcasting real GDP
 period = "2016q4"
@@ -17,7 +17,7 @@ options_baseline = Options(
 )
 
 print(f"Loading Base Line Model for vintage: {vintage_old}")
-Spec, X_old, _, Z_old = run_with_options(options_baseline)
+Spec, X_old, _, Z_old = get_with_options(options_baseline)
 
 ResObject = run(X_old, Spec, options_baseline)
 Res = ResObject.result

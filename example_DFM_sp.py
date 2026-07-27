@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dfm_sp import Options, run_with_options, run
+from dfm_sp import Options, get_with_options, run
 from dfm_sp.core.summarize import summarize
 from dfm_sp.sp_plots import (
     plot_transformed_data_one,
@@ -24,7 +24,7 @@ options = Options(
 pd.set_option("display.expand_frame_repr", False)
 
 # -------------------------------------------------Load model specification and dataset.
-Spec, X, Time, Z = run_with_options(options)
+Spec, X, Time, Z = get_with_options(options)
 
 # Summarize dataset
 summarize(X, Time, Spec)

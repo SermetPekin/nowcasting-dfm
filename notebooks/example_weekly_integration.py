@@ -65,7 +65,7 @@ def main():
     # ---------------------------------------------------------
     # 5. Build SpecConfig mapping the Weekly data as Monthly ("m")
     # ---------------------------------------------------------
-    # Raw payload formats ready to feed into `run_with_options` / `run_dfm`
+    # Raw payload formats ready to feed into `get_with_options` / `run_dfm`
     Z_raw = df.to_numpy()
     Time_raw = df.index.to_numpy()
 

@@ -9,7 +9,7 @@ from dfm_sp.core.load_spec import SpecConfig, LoadSpec, load_spec  # load_spec i
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
 from dfm_sp.core.summarize import summarize
-from dfm_sp.sp_run import run_with_options, run
+from dfm_sp.sp_run import get_with_options, run, run_with_options
 from dfm_sp.sp_update_nowcast_ import sp_update_nowcast
 from dfm_sp.sp_plots import (
     plot_transformed_data,
@@ -32,7 +32,7 @@ __all__ = [
     "Options",
     "SpecConfig",
     "ResultObject",
-    "run_with_options",
+    "get_with_options",
     "run",
     # Plotting/Visualizations
     "plot_transformed_data",

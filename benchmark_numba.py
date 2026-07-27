@@ -125,7 +125,7 @@ def run_full_dfm_benchmark():
     print("3. FULL DFM RUN  (use_numba=True vs False)")
     print("=" * 60)
     try:
-        from dfm_sp import Options, run_with_options, run
+        from dfm_sp import Options, get_with_options, run
 
         options_numba = Options(
             vintage="2016-06-29",
@@ -139,7 +139,7 @@ def run_full_dfm_benchmark():
         options_plain = options_numba.copy()
         options_plain.use_numba = False
 
-        Spec, X, _, _ = run_with_options(options_numba)
+        Spec, X, _, _ = get_with_options(options_numba)
 
         t0 = time.perf_counter()
         res_numba = run(X, Spec, options_numba)

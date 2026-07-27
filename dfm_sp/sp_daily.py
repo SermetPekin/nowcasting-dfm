@@ -15,7 +15,7 @@ from dfm_sp.sp_plots import (
     plot_projection_x_over_y,
 )
 from dfm_sp.sp_classes import Options, ResultObject
-from dfm_sp.sp_run import plot_with_options, run, run_with_options
+from dfm_sp.sp_run import plot_with_options, run, get_with_options
 from dfm_sp.sp_plots2 import (
     plot_factor_contribution,
     plot_factors_with_series,
@@ -30,7 +30,7 @@ def daily_report(options: Options | None = None):
 
     if options is None:
         options = Options(ROOT)
-    Spec, X, Time, Z = run_with_options(options)
+    Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
     generate_html_report(ResObject, Time, X, Z, options)
 
@@ -40,7 +40,7 @@ def main_interactive():
     ROOT = Path(".")
 
     options = Options(ROOT)
-    Spec, X, Time, Z = run_with_options(options)
+    Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
     plot_with_options(options)
     plot_transformed_data(Spec, X, Z, Time, options.plot1_series)

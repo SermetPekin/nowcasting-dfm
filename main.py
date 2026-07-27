@@ -8,7 +8,7 @@ import pandas as pd
 # DFM Spkn edition
 from dfm_sp import (
     Options,
-    run_with_options,
+    get_with_options,
     plot_with_options,
     plot_transformed_data,
     ResultObject,
@@ -29,14 +29,14 @@ from dfm_sp import generate_html_report
 
 # ================================================================================
 def main():
-    Spec, X, Time, Z = run_with_options(options)
+    Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
     generate_html_report(ResObject, Time, X, Z, options)
 
 
 def main_interactive():
     SHOW = True
-    Spec, X, Time, Z = run_with_options(options)
+    Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
     plot_with_options(options)
     plot_transformed_data(Spec, X, Z, Time, options.plot1_series)

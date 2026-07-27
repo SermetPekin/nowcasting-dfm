@@ -26,7 +26,7 @@ pip install "nowcasting-dfm[all]"
 ## Quick Start
 
 ```python
-from dfm_sp import Options, run_with_options, run, download_sample_data
+from dfm_sp import Options, get_with_options, run, download_sample_data
 
 # Download sample US vintage data (only needed once)
 download_sample_data()
@@ -40,7 +40,7 @@ options = Options(
     use_cache=True,
 )
 
-Spec, X, Time, Z = run_with_options(options)
+Spec, X, Time, Z = get_with_options(options)
 result = run(X, Spec, options)
 ```
 
