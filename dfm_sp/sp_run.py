@@ -68,7 +68,7 @@ def run(X, Spec, run_options: Options = None) -> ResultObject:
 
 
 def run_with_options(options: Options, verbose = True):
-    Spec = load_spec(options.spec_file_name)
+    Spec : load_spec = load_spec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
     )
