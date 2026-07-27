@@ -40,9 +40,13 @@ def test_options_copy_method():
         opt_new.vintage_date == "2016-12-23"
     ), "Copied vintage_date should evaluate to new vintage"
 
-    # Test that base properties transferred safely
     assert opt_new.country == "US"
     assert opt_new.max_iter == 5000
 
-    # Test hash keys are different since vintage parameter drives identical parameter states
-    # Note: frozen hash state generation runs on __post_init__ so we test properties directly
+    opt2 = Options(
+            vintage=-1,
+            country="US",
+            spec_file_name="Spec_US_example.xls",
+            max_iter=5000,
+        )
+    assert isinstance(opt2.vintage_date , str) 
