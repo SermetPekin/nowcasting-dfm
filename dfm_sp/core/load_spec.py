@@ -136,22 +136,24 @@ class load_spec:
 
         self._set_transformations()
 
-    def _set_transformations(self):
+    def _set_transformations(self, verbose = False ):
         # Transformations via central registry
         from dfm_sp.sp_transformations import MacroTransformations
 
         self.UnitsTransformed = np.array(
             [MacroTransformations.get_description(i) for i in self.Transformation]
         )
-        # Summarize model specification
-        print("\n Table 1: Model specification \n")
-        print(
-            pd.DataFrame(
-                {
-                    "SeriesID": self.SeriesID,
-                    "SeriesName": self.SeriesName,
-                    "Units": self.Units,
-                    "UnitsTransformed": self.UnitsTransformed,
-                }
+        if verbose : 
+                
+            # Summarize model specification
+            print("\n Table 1: Model specification \n")
+            print(
+                pd.DataFrame(
+                    {
+                        "SeriesID": self.SeriesID,
+                        "SeriesName": self.SeriesName,
+                        "Units": self.Units,
+                        "UnitsTransformed": self.UnitsTransformed,
+                    }
+                )
             )
-        )
