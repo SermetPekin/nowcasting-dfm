@@ -10,6 +10,7 @@ from datetime import datetime as dt
 import pickle
 import sys
 from pathlib import Path
+from typing import Optional, Tuple
 
 # -------------------------------------------------Libraries
 # Libs
@@ -31,7 +32,7 @@ from dfm_sp.sp_classes import Options, ResultObject
 
 
 @Timer()
-def run(X, Spec, run_options: Options = None) -> ResultObject:
+def run(X: np.ndarray, Spec: LoadSpec, run_options: Optional[Options] = None) -> ResultObject:
     # Run dynamic factor model (DFM) and save estimation output as 'ResDFM'.
     if run_options is None:
         run_options = Options()
@@ -67,7 +68,7 @@ def run(X, Spec, run_options: Options = None) -> ResultObject:
     return res_object
 
 
-def get_with_options(options: Options, verbose = True):
+def get_with_options(options: Options, verbose: bool = True) -> Tuple[LoadSpec, np.ndarray, np.ndarray, np.ndarray]:
     Spec : LoadSpec = LoadSpec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
