@@ -17,7 +17,7 @@ from dfm_sp.sp_plots import (
 from dfm_sp.sp_plots_blocks import plot_block_contributions
 from dfm_sp.sp_news import plot_news_waterfall
 
-from dfm_sp.sp_plots2 import (
+from dfm_sp.sp_plots import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,

@@ -16,7 +16,7 @@ from dfm_sp.sp_plots import (
 )
 from dfm_sp.sp_classes import Options, ResultObject
 from dfm_sp.sp_run import plot_with_options, run, get_with_options
-from dfm_sp.sp_plots2 import (
+from dfm_sp.sp_plots import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,

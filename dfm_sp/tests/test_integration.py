@@ -5,50 +5,21 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 Integration test: full pipeline run with real spec and vintage data.
 Kept deliberately fast by capping max_iter at 10.
+The pipeline_result fixture is provided by conftest.py (session-scoped).
 """
 
 import numpy as np
 import pytest
 from pathlib import Path
 
-# Resolve project root from this file's location (dfm_sp/tests/ -> project root)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-
 SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
-VINTAGE = "2016-06-29"
-DATA_FILE = PROJECT_ROOT / "data" / "US" / f"{VINTAGE}.xls"
+DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
 
-
-# ---------------------------------------------------------------------------
-# Skip the whole module if the fixture files are not present (e.g. fresh clone
-# before download_sample_data() has been run).
-# ---------------------------------------------------------------------------
 pytestmark = pytest.mark.skipif(
     not SPEC_FILE.exists() or not DATA_FILE.exists(),
     reason="Sample data not present — run download_sample_data() first.",
 )
-
-
-@pytest.fixture(scope="module")
-def pipeline_result():
-    """Run the full get_with_options → run pipeline once and share the result."""
-    from dfm_sp import Options
-    from dfm_sp.sp_run import get_with_options, run
-
-    options = Options(
-        root=PROJECT_ROOT,
-        vintage=VINTAGE,
-        country="US",
-        spec_file_name=str(SPEC_FILE),
-        max_iter=10,
-        threshold=1e-3,
-        use_cache=False,
-        use_numba=False,
-    )
-
-    Spec, X, Time, Z = get_with_options(options, verbose=False)
-    res_object = run(X, Spec, options)
-    return options, Spec, X, Time, Z, res_object
 
 
 def test_spec_loads(pipeline_result):

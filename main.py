@@ -18,7 +18,7 @@ from dfm_sp import (
     plot_projection_x_over_y,
     plot_prediction_intervals,
 )
-from dfm_sp.sp_plots2 import (
+from dfm_sp.sp_plots import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,
