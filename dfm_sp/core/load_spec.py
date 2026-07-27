@@ -30,6 +30,7 @@ class SpecConfig:
     blocks_matrix: np.ndarray
 
 class load_spec:
+
     """
     Load model specification for a dynamic factor model (DFM).
 
@@ -46,6 +47,17 @@ class load_spec:
     """
 
     def __init__(self, spec_input: Union[str, Path, SpecConfig]):
+        
+        self._SeriesID = None
+        self._SeriesName = None
+        self._Frequency = None
+        self._Units = None
+        self._Transformation = None
+        self._Category = None
+        self._Blocks = None
+        self._BlockNames = None
+        self._UnitsTransformed = None
+        
         if isinstance(spec_input, (str, Path)):
             self._init_from_file(str(spec_input))
         elif isinstance(spec_input, SpecConfig):
@@ -177,6 +189,7 @@ class load_spec:
 
         self._set_transformations()
 
+
     def _init_from_file(self, filename: str) -> None:
         """Initialize from an Excel/CSV file."""
         if filename.lower().endswith(".csv"):
@@ -187,21 +200,18 @@ class load_spec:
         raw.columns = [str(i).replace(" ", "") for i in raw.columns]
         raw = raw[raw["Model"] == 1].reset_index(drop=True)
 
-        # Sort by frequency (d, w, m, q, sa, a)
+        # Sort by frequency
         frequency_order = ["d", "w", "m", "q", "sa", "a"]
         permutations = []
         for freq in frequency_order:
             permutations += list(raw[raw.Frequency == freq].index)
         raw = raw.loc[permutations, :]
 
-        # Parse fields
-        required_fields = [
-            "SeriesID", "SeriesName", "Frequency",
-            "Units", "Transformation", "Category"
-        ]
+        required_fields = ["SeriesID", "SeriesName", "Frequency", "Units", "Transformation", "Category"]
         for field in required_fields:
             if field in raw.columns:
-                setattr(self, field, raw[field].to_numpy(copy=True))
+                setattr(self, f"_{field}", raw[field].to_numpy(copy=True))   
+                print(f"setting field:  {field} as  {raw[field]}")
             else:
                 raise ValueError(f"Missing required column: {field}")
 
@@ -211,11 +221,11 @@ class load_spec:
         Blocks[Blocks.isna()] = 0
         if not (Blocks.iloc[:, 0] == 1).all():
             raise ValueError("All variables must load on global block.")
-        self.Blocks = Blocks.to_numpy(copy=True)
-        self.BlockNames = [re.sub(r"Block\d+-", "", col) for col in block_cols]
+        self._Blocks = Blocks.to_numpy(copy=True)   
+        self._BlockNames = [re.sub(r"Block\d+-", "", col) for col in block_cols]  
 
-        self._set_transformations()
-
+        self._set_transformations() 
+        
     def _set_transformations(self, verbose: bool = False) -> None:
         """Set human-readable transformation descriptions."""
         from dfm_sp.sp_transformations import MacroTransformations
