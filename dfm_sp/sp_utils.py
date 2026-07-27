@@ -74,8 +74,9 @@ def get_ok(_folder):
             ok_files.append((a, b[0]))
     return ok_files
 
-
-def get_latest(_folder):
+def get_latest(_folder, index=0):
     o = get_ok(_folder)
     sorted_d = sorted(o, key=lambda x: x[0], reverse=True)
-    return sorted_d[0][1].split(".")[0]
+    if index >= len(sorted_d):
+        raise IndexError(f"Index {index} is out of range. The list has only {len(sorted_d)} elements. check vintage index. 0 for the latest file. 1 for the one before the latest etc.!")
+    return sorted_d[index][1].split(".")[0]
