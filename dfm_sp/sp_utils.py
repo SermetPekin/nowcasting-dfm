@@ -7,10 +7,10 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 from pathlib import Path
 import os
-from datetime import datetime
-from datetime import date
-from typing import List, Any, Tuple
+from typing import List, Tuple
 import time
+from datetime import date, datetime
+from typing import Optional
 
 
 class Timer:
@@ -47,12 +47,13 @@ def get_ok_files(_folder: Path):
     return ok_files
 
 
-def as_date(x: str):
+def as_date(x: str) -> Optional[datetime]:
     try:
         a = datetime.strptime(x, "%Y-%m-%d")
         return a
-    except:
+    except Exception:
         print("ignoring this file", x)
+        return None
 
 
 def get_ok(_folder) -> List[Tuple[date, str]]:
