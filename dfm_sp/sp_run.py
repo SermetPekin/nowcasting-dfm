@@ -1,10 +1,10 @@
-
 """
 BSD 3-Clause License
 
 Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
+
 import os
 from datetime import datetime as dt
 import pickle
@@ -67,7 +67,7 @@ def run(X, Spec, run_options: Options = None) -> ResultObject:
     return res_object
 
 
-def run_with_options(options: Options):
+def run_with_options(options: Options, verbose = True):
     Spec = load_spec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
@@ -75,8 +75,8 @@ def run_with_options(options: Options):
     if not datafile.exists():
         raise FileNotFoundError(str(datafile))
     X, Time, Z = load_data(datafile, Spec, options.sample_start)
-    # Summarize dataset
-    summarize(X, Time, Spec)
+    if verbose :        
+        summarize(X, Time, Spec)
     return Spec, X, Time, Z
 
 
