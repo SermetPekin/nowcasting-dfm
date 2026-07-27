@@ -9,7 +9,7 @@ from pathlib import Path
 import os
 from datetime import datetime
 from datetime import date
-
+from typing import List, Any, Tuple
 import time
 
 
@@ -38,15 +38,6 @@ def get_attr_from_spec(spec, series_id: str, attr_name="SeriesName"):
     raise ValueError("Not found attr from spec ")
 
 
-def inverse_sample_start(ordinal_with_offset: int) -> str:
-    # Step 1: Subtract the offset (366)
-    original_ordinal = ordinal_with_offset - 366
-    # Step 2: Convert ordinal back to date
-    original_date = date.fromordinal(original_ordinal)
-    # Step 3: Format as string
-    return original_date.strftime("%Y-%m-%d")
-
-
 def get_ok_files(_folder: Path):
     def ok(f: str):
         return f.endswith(".xlsx") or f.endswith(".xls")
@@ -64,7 +55,7 @@ def as_date(x: str):
         print("ignoring this file", x)
 
 
-def get_ok(_folder):
+def get_ok(_folder) -> List[Tuple[date, str]]:
     o = get_ok_files(_folder)
     names_tuple = [(x, x.split(".")[0], x.split(".")[1]) for x in o]
     dates = tuple(as_date(x[1]) for x in names_tuple)
@@ -74,9 +65,12 @@ def get_ok(_folder):
             ok_files.append((a, b[0]))
     return ok_files
 
-def get_latest(_folder, index=0):
+
+def get_latest(_folder, index=0) -> str:
     o = get_ok(_folder)
     sorted_d = sorted(o, key=lambda x: x[0], reverse=True)
     if index >= len(sorted_d):
-        raise IndexError(f"Index {index} is out of range. The list has only {len(sorted_d)} elements. check vintage index. 0 for the latest file. 1 for the one before the latest etc.!")
+        raise IndexError(
+            f"Index {index} is out of range. The list has only {len(sorted_d)} elements. check vintage index. 0 for the latest file. 1 for the one before the latest etc.!"
+        )
     return sorted_d[index][1].split(".")[0]
