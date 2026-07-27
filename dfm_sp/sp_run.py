@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 # ================================================================================
-# DFM Spkn edition
+
 from dfm_sp.core.load_spec import LoadSpec
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
