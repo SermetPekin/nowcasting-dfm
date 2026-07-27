@@ -227,7 +227,6 @@ def dropData(X, Time, Z, sample):
         sample = np.datetime64(sample)
     elif isinstance(sample, (int, np.integer)):
         sample = np.datetime64(sample, "D")  # Assume ordinal
-    print(sample)
     # Filter
     filter_index = Time >= sample
     X = X[filter_index, :].copy()
