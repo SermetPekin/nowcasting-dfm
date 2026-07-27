@@ -70,6 +70,31 @@ class Options:
         [("INDPRO", "HOUST"), ("PAYEMS", "CPIAUCSL"), ("UNRATE", "INDPRO")]
     )
 
+    def __post_init__(self):
+        if isinstance(self.root, str):
+            self.root = Path(self.root)
+        if self.data_folder is None:
+            self.data_folder = self.root / "data" / self.country
+        if isinstance(self.spec_file_name, str):
+            self.spec_file_name = self.root / self.spec_file_name
+        if isinstance(self.sample_start, str):
+            self.sample_start = pd.Timestamp(self.sample_start)
+
+        if isinstance(self.out_folder , str ): 
+            self.out_folder = Path(self.out_folder)
+    
+        self.frozen = FrozenOptions(
+            root=self.root,
+            max_iter=self.max_iter,
+            threshold=self.threshold,
+            use_numba=self.use_numba,
+            spec_file_name=self.spec_file_name,
+            country=self.country,
+            sample_start=self.sample_start,
+            vintage=self.vintage,
+            data_folder=self.data_folder,
+        )
+        
     def name_format(self):
         if self.max_iter < 5000:
             ek = f"TEST-RUN-with-max_iter{self.max_iter}"
@@ -93,27 +118,7 @@ class Options:
             vintage_date = get_latest(self.data_folder)
         return vintage_date
 
-    def __post_init__(self):
-        if isinstance(self.root, str):
-            self.root = Path(self.root)
-        if self.data_folder is None:
-            self.data_folder = self.root / "data" / self.country
-        if isinstance(self.spec_file_name, str):
-            self.spec_file_name = self.root / self.spec_file_name
-        if isinstance(self.sample_start, str):
-            self.sample_start = pd.Timestamp(self.sample_start)
-
-        self.frozen = FrozenOptions(
-            root=self.root,
-            max_iter=self.max_iter,
-            threshold=self.threshold,
-            use_numba=self.use_numba,
-            spec_file_name=self.spec_file_name,
-            country=self.country,
-            sample_start=self.sample_start,
-            vintage=self.vintage,
-            data_folder=self.data_folder,
-        )
+    
 
     def check(self):
         if self.max_iter < 5000:
