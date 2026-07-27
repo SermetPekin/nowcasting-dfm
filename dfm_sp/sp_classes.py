@@ -61,7 +61,7 @@ class Options:
     out_folder: Union[Path, str] = Path(".")
     use_cache: bool = True  # Added so user can force re-run
     use_numba: bool = False
-    frozen: FrozenOptions = None
+    frozen: Optional[FrozenOptions] = None
     plot1_series: Tuple[str] = tuple(
         ["INDPRO", "HOUST", "PAYEMS", "CPIAUCSL", "UNRATE"]
     )

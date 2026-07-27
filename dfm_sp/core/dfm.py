@@ -18,6 +18,14 @@ from scipy.linalg import block_diag
 # -------------------------------------------------Dynamic Factor Modeling functions
 from typing import Dict, Any, Union
 from .load_spec import LoadSpec, SpecConfig
+try:
+    from tqdm import tqdm as _tqdm
+except ImportError:  # tqdm is optional; fall back to a no-op stub
+    class _tqdm:  # type: ignore[no-redef]
+        def __init__(self, *args, **kwargs): pass
+        def update(self, n=1): pass
+        def set_postfix(self, *args, **kwargs): pass
+        def close(self): pass
 
 
 def dfm(
@@ -26,6 +34,7 @@ def dfm(
     threshold: float = 1e-5,
     max_iter: int = 5000,
     use_numba=True,
+    verbose: bool = True,
 ) -> Dict[str, Any]:
     # DFM()    Runs the dynamic factor model
     #
@@ -143,6 +152,7 @@ def dfm(
     y_est, _ = remNaNs_spline(xNaN.copy(), optNaN)
     y_est = y_est.T
     # max_iter = 5000
+    _pbar = _tqdm(total=max_iter, desc="EM", unit="iter", disable=not verbose)
     while num_iter < max_iter and not converged:  # Loop until converges or max iter.
         # Applying EM algorithm
         C_new, R_new, A_new, Q_new, Z_0, V_0, loglik = EMstep(
@@ -154,20 +164,18 @@ def dfm(
         Q = Q_new.copy()
         if num_iter > 2:  # Check convergence
             converged, decrease = em_converged(loglik, previous_loglik, threshold, 1)
-        if (num_iter % 10) == 0 and num_iter > 0:
-            print("Now running the {}th iteration of max {}".format(num_iter, max_iter))
-            print(
-                "Loglik: {} (% Change: {})".format(
-                    loglik, 100 * ((loglik - previous_loglik) / previous_loglik)
-                )
-            )
         LL.append(loglik)
         previous_loglik = loglik
         num_iter += 1
+        _pbar.update(1)
+        _pbar.set_postfix({"loglik": f"{loglik:.4f}"})
+    _pbar.close()
     if num_iter < max_iter:
-        print("Successful: Convergence at {} interations".format(num_iter))
+        if verbose:
+            print("Successful: Convergence at {} iterations".format(num_iter))
     else:
-        print("Stopped because maximum iterations reached")
+        if verbose:
+            print("Stopped because maximum iterations reached")
     # Final run of the Kalman filter
     Zsmooth, _, _, _ = runKF(y, A, C, Q, R, Z_0, V_0, use_numba=use_numba)
     Zsmooth = Zsmooth.T

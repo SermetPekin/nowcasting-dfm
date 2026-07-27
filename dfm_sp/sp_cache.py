@@ -13,8 +13,6 @@ from typing import Any, Callable, Dict, Optional
 from pathlib import Path
 import os
 
-from numpy.testing import verbose
-
 
 class CacheHandler:
     def __init__(self, cache_dir=".func_caches", max_age_seconds=3600):

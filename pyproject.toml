@@ -31,6 +31,7 @@ dependencies = [
     "plotly>=5.18.0",
     "scipy>=1.11.0",
     "statsmodels>=0.14.0",
+    "tqdm>=4.65.0",
     "xlrd>=2.0.2",
 ]
 
@@ -63,6 +64,7 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.sdist]
 include = [
     "dfm_sp/**/*.py",
+    "dfm_sp/py.typed",
     "data/**",
     "Spec_US_example.xls",
     "README.md",
@@ -72,6 +74,7 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = ["dfm_sp"]
 artifacts = [
+    "dfm_sp/py.typed",
     "data/**",
     "Spec_US_example.xls",
 ]

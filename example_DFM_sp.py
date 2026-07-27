@@ -16,7 +16,7 @@ options = Options(
     sample_start="2000-01-01",
     spec_file_name="Spec_US_example.xls",
     threshold=1e-4,
-    use_cache=True,
+    use_cache=False,
     max_iter=5000,
 )
 

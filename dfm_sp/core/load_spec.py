@@ -221,8 +221,7 @@ class LoadSpec:
         required_fields = ["SeriesID", "SeriesName", "Frequency", "Units", "Transformation", "Category"]
         for field in required_fields:
             if field in raw.columns:
-                setattr(self, f"_{field}", raw[field].to_numpy(copy=True))   
-                print(f"setting field:  {field} as  {raw[field]}")
+                setattr(self, f"_{field}", raw[field].to_numpy(copy=True))
             else:
                 raise ValueError(f"Missing required column: {field}")
 
