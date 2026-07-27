@@ -5,7 +5,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-
 from dataclasses import dataclass
 from typing import Any
 from pathlib import Path
@@ -80,9 +79,9 @@ class Options:
         if isinstance(self.sample_start, str):
             self.sample_start = pd.Timestamp(self.sample_start)
 
-        if isinstance(self.out_folder , str ): 
+        if isinstance(self.out_folder, str):
             self.out_folder = Path(self.out_folder)
-    
+
         self.frozen = FrozenOptions(
             root=self.root,
             max_iter=self.max_iter,
@@ -94,7 +93,7 @@ class Options:
             vintage=self.vintage,
             data_folder=self.data_folder,
         )
-        
+
     def name_format(self):
         if self.max_iter < 5000:
             ek = f"TEST-RUN-with-max_iter{self.max_iter}"
@@ -111,15 +110,22 @@ class Options:
         obj_bytes = pickle.dumps(self.frozen)
         return hashlib.sha256(obj_bytes).hexdigest()[:7]
 
+
     @property
     def vintage_date(self):
-        vintage_date = self.vintage
-        if self.vintage in [None, "auto", "AUTO", "LATEST", "latest"]:
-            vintage_date = get_latest(self.data_folder)
-        return vintage_date
+        vintage = self.vintage
+        if vintage is None:
+            return get_latest(self.data_folder)
 
+        vintage_lower = str(vintage).lower()
+        if vintage_lower in ["auto", "latest"]:
+            return get_latest(self.data_folder)
+
+        if isinstance(vintage, int):
+            return get_latest(self.data_folder, index=vintage)
+
+        return vintage
     
-
     def check(self):
         if self.max_iter < 5000:
             print(
@@ -152,6 +158,7 @@ class Options:
     def copy(self):
         """Create a copy of the Options object."""
         import copy
+
         return copy.copy(self)
 
 
