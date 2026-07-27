@@ -125,7 +125,6 @@ class Options:
             time.sleep(2)
 
     def __str__(self):
-        """Create a beautiful string representation for notebooks and terminal output."""
         return (
             f"DFM Runtime Options\n"
             f"----------------------------------------\n"
@@ -143,13 +142,11 @@ class Options:
         )
 
     def __repr__(self):
-        """Short representation showing the core parameters"""
         return f"<Options(country='{self.country}', max_iter={self.max_iter}, vintage='{self.vintage_date}', cache={self.use_cache})>"
 
     def copy(self):
         """Create a copy of the Options object."""
         import copy
-
         return copy.copy(self)
 
 
