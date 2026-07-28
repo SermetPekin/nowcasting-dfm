@@ -77,7 +77,7 @@ def load_data(
 
 
     """
-    if not os.path.splitext(datafile)[1].lower() in [".xlsx", ".xls", ".csv"]:
+    if os.path.splitext(datafile)[1].lower() not in [".xlsx", ".xls", ".csv"]:
         raise ValueError("File is not an EXCEL or CSV FILE")
     Z, Time, Mnem = readData(datafile)
     #    Z : raw (untransformed) observed data
@@ -90,7 +90,7 @@ def load_data(
     # Transform data based on model specification
     X, Time, Z = transformData(Z.copy(), Time.copy(), Spec)
     # Drop data not in estimation sample
-    if sample != None:
+    if sample is not None:
         X, Time, Z = dropData(X.copy(), Time.copy(), Z.copy(), sample)
     return X, Time, Z
 
@@ -208,7 +208,7 @@ def transformData(Z, Time, Spec):
     # since transformations cause missing values
     # Sp added this for Debugging
     d = pd.DataFrame(X[3:, :], columns=cols)
-    d.to_excel(f"TransformedData.xlsx")
+    d.to_excel("TransformedData.xlsx")
     return X[3:, :], Time[3:], Z[3:, :]
 
 

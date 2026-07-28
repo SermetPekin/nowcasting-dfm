@@ -41,7 +41,7 @@ def plot_block_contributions(
 
     # 3. Associate Factor Columns with Logical Blocks
     block_names = spec.BlockNames
-    blocks_matrix = spec.Blocks  # [N_series x N_blocks]
+    _blocks_matrix = spec.Blocks  # [N_series x N_blocks]
 
     # Normally one factor per block unless explicitly customized
     # Factor assignment maps column-to-column conceptually

@@ -5,18 +5,13 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-import os
-import copy
 import numpy as np
-import pandas as pd
 
-from dfm_sp.core.load_data import load_data, sortData
 from dfm_sp.core.update_Nowcast import update_nowcast
 from dfm_sp.sp_classes import Options
 from dfm_sp.sp_run import run, get_with_options
 from dfm_sp.sp_news import plot_news_waterfall
 from dfm_sp.sp_cache import CacheHandler
-from dfm_sp.core.load_spec import LoadSpec
 
 CACHE_DIR = ".pickles"
 cache_ = CacheHandler(cache_dir=CACHE_DIR)
@@ -84,6 +79,7 @@ def _usage():
         spec_file_name=spec_file_name,
         max_iter=max_iter,
         use_cache=True,
+        sample_start=sample_start,
     )
 
     result_dict = sp_update_nowcast(options_baseline, vintage_new, series, period)

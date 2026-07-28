@@ -10,9 +10,7 @@ from typing import Any
 from pathlib import Path
 import pandas as pd
 from dfm_sp.sp_utils import get_latest
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Tuple, List, Optional, Union
+from typing import Tuple, Optional, Union
 
 
 # ===================================== FrozenOptions =================================
@@ -95,10 +93,10 @@ class Options:
             data_folder=self.data_folder,
         )
 
-    def get_verbose(self, verbose: Optional[bool] = None)->bool:
-        verbose = self.verbose if verbose is None else verbose 
-        return verbose 
-    
+    def get_verbose(self, verbose: Optional[bool] = None) -> bool:
+        verbose = self.verbose if verbose is None else verbose
+        return verbose
+
     def name_format(self):
         if self.max_iter < 5000:
             ek = f"TEST-RUN-with-max_iter{self.max_iter}"

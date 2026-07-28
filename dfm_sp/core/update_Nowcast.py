@@ -7,10 +7,8 @@ Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated w
 """
 
 # -------------------------------------------------Libraries
-from datetime import datetime as dt
 import pandas as pd
 import numpy as np
-from dateutil.relativedelta import relativedelta
 from dfm_sp.core.dfm import SKF, FIS
 
 
@@ -51,7 +49,7 @@ def update_nowcast(
             f"Target series '{series}' not found in Spec configured. Valid series are: {Spec.SeriesID.tolist()}"
         )
 
-    series_name = Spec.SeriesName[i_series]
+    _series_name = Spec.SeriesName[i_series]
     freq = Spec.Frequency[i_series][0]
     if freq == "m":
         y, m = period.split(freq)
@@ -253,7 +251,7 @@ def News_DFM(X_old, X_new, Res, t_fcst, v_news):
             # Subset for target variable and forecast time
             y_old = Res_old["X_sm"][t_fcst, v_news]
             y_new = Res_new["X_sm"][t_fcst, v_news]
-            P = Res_old["P"][1:].copy()
+            _unused_P = Res_old["P"][1:].copy()
             for i in range(n_news):  # Cycle through total number of updates
                 diff = abs(t_fcst - t_miss[i])
                 h = int(diff[0]) if getattr(diff, "ndim", 0) > 0 else int(diff)
@@ -285,7 +283,7 @@ def News_DFM(X_old, X_new, Res, t_fcst, v_news):
                 else:
                     innov = np.hstack([innov, X_new_norm - X_sm_norm])
             innov = innov.reshape((1, -1))
-            ins = len(innov)
+            _ins = len(innov)
             WW = np.zeros((v_miss[-1] + 1, v_miss[-1] + 1))
             WW[:] = np.nan
             # Gives non-standardized series weights

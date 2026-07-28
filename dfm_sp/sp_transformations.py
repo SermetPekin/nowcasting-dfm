@@ -4,8 +4,8 @@ BSD 3-Clause License
 Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
+
 import numpy as np
-import pandas as pd
 from typing import Dict, Callable
 
 

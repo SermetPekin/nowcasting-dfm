@@ -5,9 +5,7 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-
 import numpy as np
-import pytest
 from dfm_sp.core.dfm import run_kalman_filter_loop, run_kalman_filter_loop_python
 
 

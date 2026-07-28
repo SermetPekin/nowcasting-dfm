@@ -6,17 +6,12 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 """
 
 import os
-from datetime import datetime as dt
 import pickle
-import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
 # -------------------------------------------------Libraries
 # Libs
-import pandas as pd
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
 import numpy as np
 
 # ================================================================================
@@ -25,7 +20,7 @@ from dfm_sp.core.load_spec import LoadSpec
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
 from dfm_sp.core.summarize import summarize
-from dfm_sp.sp_utils import get_latest, Timer
+from dfm_sp.sp_utils import Timer
 from dfm_sp.sp_plots import plot_transformed_data
 from dfm_sp.sp_plots import plot_loglik, plot_projection_x_over_y
 from dfm_sp.sp_classes import Options, ResultObject
@@ -54,9 +49,7 @@ def run(
         with open(str(OUT_FILE), "rb") as f:
             return pickle.load(f)
     elif OUT_FILE.exists():
-        print(
-            f"[CACHE IGNORED] run_options.use_cache is False. Re-running calculation."
-        )
+        print("[CACHE IGNORED] run_options.use_cache is False. Re-running calculation.")
     run_options.check()
     Res = dfm(
         X,
@@ -64,7 +57,7 @@ def run(
         run_options.threshold,
         max_iter=run_options.max_iter,
         use_numba=run_options.use_numba,
-        verbose=run_options.verbose,
+        verbose=run_options.get_verbose(verbose),
     )
     res_object = ResultObject(Res, Spec, run_options)
     with open(str(OUT_FILE), "wb") as handle:

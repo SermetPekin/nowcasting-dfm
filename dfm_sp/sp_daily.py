@@ -6,7 +6,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 """
 
 from pathlib import Path
-import pandas as pd
 
 from dfm_sp.sp_plots import (
     plot_transformed_data,

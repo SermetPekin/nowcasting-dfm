@@ -1,9 +1,5 @@
-import warnings
+from pathlib import Path
 
-# Suppress annoying standard warnings during import
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-from pathlib import Path 
 # Exposed Public API
 from dfm_sp.sp_classes import Options, ResultObject
 from dfm_sp.core.load_spec import (
@@ -12,7 +8,7 @@ from dfm_sp.core.load_spec import (
     load_spec,
 )  # load_spec is a backward-compat alias
 
-from dfm_sp.sp_daily import daily_report 
+from dfm_sp.sp_daily import daily_report
 
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
@@ -34,6 +30,13 @@ from dfm_sp.sp_vintage_generator import VintageMaker, FixedDayRule, WeekdayRule
 
 # Data download helper
 from dfm_sp.sp_download import download_sample_data
+
+
+import warnings
+
+# Suppress annoying standard warnings during import
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 
 __all__ = [
     "Path",
@@ -61,5 +64,8 @@ __all__ = [
     "load_data",
     "dfm",
     "summarize",
-    "daily_report" , 
+    "daily_report",
+    "download_sample_data",
+    "run_with_options",
+    "sp_update_nowcast",
 ]

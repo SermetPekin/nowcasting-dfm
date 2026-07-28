@@ -5,9 +5,7 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-
 import numpy as np
-import pytest
 from dfm_sp.sp_transformations import MacroTransformations
 
 

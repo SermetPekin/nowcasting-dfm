@@ -1,25 +1,28 @@
-""" 
+"""
 BSD 3-Clause License
 
 Copyright (c) 2018, Federal Reserve Bank of New York (original MATLAB implementation by Eric Qian and Brandyn Bok)
 Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated with FRBNY, https://github.com/MajesticKhan/Nowcasting-Python)
 Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
-""" 
-from __future__ import annotations  
-from typing import Optional, List, Dict, Union, TYPE_CHECKING
+"""
+
+from __future__ import annotations
+from typing import Optional, List, Union, TYPE_CHECKING
 import pandas as pd
 import numpy as np
 import re
 from pathlib import Path
 from dataclasses import dataclass
 
-if TYPE_CHECKING:  
-    from dfm_sp.sp_transformations import MacroTransformations
+if TYPE_CHECKING:
+    pass
+
 
 @dataclass
 class SpecConfig:
     """Alternative way to initialize a Spec object without relying on Excel"""
+
     series_id: List[str]
     series_name: List[str]
     frequency: List[str]
@@ -29,8 +32,8 @@ class SpecConfig:
     block_names: List[str]
     blocks_matrix: np.ndarray
 
-class LoadSpec:
 
+class LoadSpec:
     """
     Load model specification for a dynamic factor model (DFM).
 
@@ -56,7 +59,7 @@ class LoadSpec:
         self._Blocks: Optional[np.ndarray] = None
         self._BlockNames: Optional[List[str]] = None
         self._UnitsTransformed: Optional[np.ndarray] = None
-        
+
         if isinstance(spec_input, (str, Path)):
             self._init_from_file(str(spec_input))
         elif isinstance(spec_input, SpecConfig):
@@ -78,18 +81,22 @@ class LoadSpec:
         ]
 
         # Create a table of series information
-        series_df = pd.DataFrame({
-            "ID": self.SeriesID,
-            "Name": self.SeriesName,
-            "Frequency": self.Frequency,
-            "Units": self.Units,
-            "Transformation": self.Transformation,
-            "Category": self.Category,
-        })
+        series_df = pd.DataFrame(
+            {
+                "ID": self.SeriesID,
+                "Name": self.SeriesName,
+                "Frequency": self.Frequency,
+                "Units": self.Units,
+                "Transformation": self.Transformation,
+                "Category": self.Category,
+            }
+        )
 
         # Add block information for each series
         for i, block_name in enumerate(self.BlockNames):
-            series_df[f"Block: {block_name}"] = self.Blocks[:, i] if i < self.Blocks.shape[1] else 0
+            series_df[f"Block: {block_name}"] = (
+                self.Blocks[:, i] if i < self.Blocks.shape[1] else 0
+            )
 
         summary.append(series_df.to_string(index=False))
         return "\n".join(summary)
@@ -196,10 +203,11 @@ class LoadSpec:
         self.BlockNames = config.block_names
 
         if not (self.Blocks[:, 0] == 1).all():
-            raise ValueError("All variables must load on global block (column 0 must be 1).")
+            raise ValueError(
+                "All variables must load on global block (column 0 must be 1)."
+            )
 
         self._set_transformations()
-
 
     def _init_from_file(self, filename: str) -> None:
         """Initialize from an Excel/CSV file."""
@@ -218,7 +226,14 @@ class LoadSpec:
             permutations += list(raw[raw.Frequency == freq].index)
         raw = raw.loc[permutations, :]
 
-        required_fields = ["SeriesID", "SeriesName", "Frequency", "Units", "Transformation", "Category"]
+        required_fields = [
+            "SeriesID",
+            "SeriesName",
+            "Frequency",
+            "Units",
+            "Transformation",
+            "Category",
+        ]
         for field in required_fields:
             if field in raw.columns:
                 setattr(self, f"_{field}", raw[field].to_numpy(copy=True))
@@ -231,14 +246,15 @@ class LoadSpec:
         Blocks[Blocks.isna()] = 0
         if not (Blocks.iloc[:, 0] == 1).all():
             raise ValueError("All variables must load on global block.")
-        self._Blocks = Blocks.to_numpy(copy=True)   
-        self._BlockNames = [re.sub(r"Block\d+-", "", col) for col in block_cols]  
+        self._Blocks = Blocks.to_numpy(copy=True)
+        self._BlockNames = [re.sub(r"Block\d+-", "", col) for col in block_cols]
 
-        self._set_transformations() 
-        
+        self._set_transformations()
+
     def _set_transformations(self, verbose: bool = False) -> None:
         """Set human-readable transformation descriptions."""
         from dfm_sp.sp_transformations import MacroTransformations
+
         self.UnitsTransformed = np.array(
             [MacroTransformations.get_description(t) for t in self.Transformation]
         )
@@ -246,12 +262,14 @@ class LoadSpec:
         if verbose:
             print("\nTable 1: Model specification\n")
             print(
-                pd.DataFrame({
-                    "SeriesID": self.SeriesID,
-                    "SeriesName": self.SeriesName,
-                    "Units": self.Units,
-                    "UnitsTransformed": self.UnitsTransformed,
-                })
+                pd.DataFrame(
+                    {
+                        "SeriesID": self.SeriesID,
+                        "SeriesName": self.SeriesName,
+                        "Units": self.Units,
+                        "UnitsTransformed": self.UnitsTransformed,
+                    }
+                )
             )
 
 

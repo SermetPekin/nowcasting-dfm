@@ -9,7 +9,6 @@ Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated w
 # -------------------------------------------------Libraries
 import pandas as pd
 import numpy as np
-from datetime import datetime as dt
 
 
 # -------------------------------------------------Functions
@@ -25,7 +24,6 @@ def summarize(X, Time, Spec):
     # Number of rows and data series
     T, N = X.shape
     print("N =     {} data series".format(N))
-    import pandas as pd
 
     print(
         "T = {} observations from {} to {}\n".format(
@@ -101,7 +99,7 @@ def data_table_prep(option, x=None, freq_dict=None, Time=None, N=None, Spec=None
         :return: returns a string representing unit transformed
     """
     if option == 1:
-        truth = (np.isnan(x) == False).cumsum()
+        truth = (~np.isnan(x)).cumsum()
         first = Time[np.where(truth == 1)[0][0]]
         last = Time[np.max(truth) - 1]  # subtracted by 1 to get index value
         import pandas as pd
