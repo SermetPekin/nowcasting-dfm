@@ -14,6 +14,11 @@ SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
 DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
 DATA_FOLDER = None # PROJECT_ROOT / "data" / "US" 
 
+pytestmark = pytest.mark.skipif(
+    not SPEC_FILE.exists() or not DATA_FILE.exists(),
+    reason="Sample data not present — run download_sample_data() first.",
+)
+
 from dfm_sp import Options, daily_report
 from pathlib import Path
 
