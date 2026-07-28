@@ -5,13 +5,13 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-from dfm_sp import Path, Options, daily_report
-
+from dfm_sp import Options, daily_report
+from pathlib import Path 
 out_folder = Path(".") / "out"
 root = Path(".")
 
 country = "US"
-max_iter = 2
+max_iter = 5000 
 threshold = 1e-3
 spec_file_name = "Spec_US_example.xls"
 sample_start = "2005-01-01"
@@ -31,7 +31,8 @@ options = Options(
     vintage=vintage,
     plot1_series=plot1_series,
     plot2_series=plot2_series,
-    out_folder=out_folder,
+    out_folder=out_folder, 
+    use_cache = False 
 )
 
 print(options)
