@@ -64,7 +64,7 @@ def run(
         run_options.threshold,
         max_iter=run_options.max_iter,
         use_numba=run_options.use_numba,
-        verbose=run_options.verbose,
+        verbose=run_options.get_verbose(verbose)
     )
     res_object = ResultObject(Res, Spec, run_options)
     with open(str(OUT_FILE), "wb") as handle:
