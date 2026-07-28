@@ -3,7 +3,7 @@ BSD 3-Clause License
 
 Copyright (c) 2018, Federal Reserve Bank of New York (original MATLAB implementation by Eric Qian and Brandyn Bok)
 Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated with FRBNY, https://github.com/MajesticKhan/Nowcasting-Python)
-
+Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 """
 
 
@@ -97,14 +97,17 @@ def dfm(
         np.int64
     )  # Number of common factors for each block
     # Par.r(1) =2;
+    
     # Display blocks
-    print("\n\n\n")
-    print("Table 3: Block Loading Structure")
-    print(
-        pd.DataFrame(data=Spec.Blocks, index=Spec.SeriesName, columns=Spec.BlockNames)
-    )
-    print("\n")
-    print("Estimating the dynamic factor model (DFM) \n\n")
+    if verbose : 
+        
+        print("\n\n\n")
+        print("Table 3: Block Loading Structure")
+        print(
+            pd.DataFrame(data=Spec.Blocks, index=Spec.SeriesName, columns=Spec.BlockNames)
+        )
+        print("\n")
+        print("Estimating the dynamic factor model (DFM) \n\n")
     T, N = X.shape
     r = Par["r"].copy()
     p = Par["p"]
@@ -203,37 +206,40 @@ def dfm(
     nM = Spec.SeriesID.shape[0] - nQ
     nLags = max(Par["p"], 5)
     nFactors = np.sum(Par["r"])
-    print("\n Table 4: Factor Loadings for Monthly Series")
-    print(
-        pd.DataFrame(
-            Res["C"][:nM, np.arange(0, nFactors * 5, 5)],
-            columns=Spec.BlockNames,
-            index=Spec.SeriesName[:nM],
+    if verbose : 
+        print("\n Table 4: Factor Loadings for Monthly Series")
+        print(
+            pd.DataFrame(
+                Res["C"][:nM, np.arange(0, nFactors * 5, 5)],
+                columns=Spec.BlockNames,
+                index=Spec.SeriesName[:nM],
+            )
         )
-    )
-    print("\n Table 5: Quarterly Loadings Sample (Global Factor)")
-    print(
-        pd.DataFrame(
-            Res["C"][(-1 - nQ + 1) :, :5],
-            columns=["f1_lag0", "f1_lag1", "f1_lag2", "f1_lag3", "f1_lag4"],
-            index=Spec.SeriesName[-1 - nQ + 1 :],
+        print("\n Table 5: Quarterly Loadings Sample (Global Factor)")
+        print(
+            pd.DataFrame(
+                Res["C"][(-1 - nQ + 1) :, :5],
+                columns=["f1_lag0", "f1_lag1", "f1_lag2", "f1_lag3", "f1_lag4"],
+                index=Spec.SeriesName[-1 - nQ + 1 :],
+            )
         )
-    )
     # Table with AR model on factors (factors with AR parameter and variance of residuals)
     A_terms = np.diag(Res["A"]).copy()
     Q_terms = np.diag(Res["Q"]).copy()
-    print("\n Table 6: Autoregressive Coefficients on Factors")
-    print(
-        pd.DataFrame(
-            {
-                "AR_Coefficient": A_terms[np.arange(0, nFactors * 5, 5)].copy(),
-                "Variance_Residual": Q_terms[np.arange(0, nFactors * 5, 5)].copy(),
-            },
-            index=Spec.BlockNames,
+    if verbose : 
+        
+        print("\n Table 6: Autoregressive Coefficients on Factors")
+        print(
+            pd.DataFrame(
+                {
+                    "AR_Coefficient": A_terms[np.arange(0, nFactors * 5, 5)].copy(),
+                    "Variance_Residual": Q_terms[np.arange(0, nFactors * 5, 5)].copy(),
+                },
+                index=Spec.BlockNames,
+            )
         )
-    )
-    # Table with AR model idiosyncratic errors (factors with AR parameter and variance of residuals)
-    print("\n Table 7: Autoregressive Coefficients on Idiosyncratic Component")
+        # Table with AR model idiosyncratic errors (factors with AR parameter and variance of residuals)
+        print("\n Table 7: Autoregressive Coefficients on Idiosyncratic Component")
     A_len = A.shape[0]
     Q_len = Q.shape[0]
     A_index = np.hstack(
@@ -248,15 +254,16 @@ def dfm(
             np.arange(nFactors * 5 + nM, Q_len, 5),
         ]
     )
-    print(
-        pd.DataFrame(
-            {
-                "AR_Coefficient": A_terms[A_index].copy(),
-                "Variance_Residual": Q_terms[Q_index].copy(),
-            },
-            index=Spec.SeriesName,
+    if verbose : 
+        print(
+            pd.DataFrame(
+                {
+                    "AR_Coefficient": A_terms[A_index].copy(),
+                    "Variance_Residual": Q_terms[Q_index].copy(),
+                },
+                index=Spec.SeriesName,
+            )
         )
-    )
     return Res
 
 
