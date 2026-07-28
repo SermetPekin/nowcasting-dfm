@@ -184,11 +184,10 @@ def dfm(
         _pbar.set_postfix({"loglik": f"{loglik:.4f}"})
     _pbar.close()
     if num_iter < max_iter:
-        if verbose:
-            print("Successful: Convergence at {} iterations".format(num_iter))
+        
+        print("Successful: Convergence at {} iterations".format(num_iter))
     else:
-        if verbose:
-            print("Stopped because maximum iterations reached")
+        print("Stopped because maximum iterations reached")
     # Final run of the Kalman filter
     Zsmooth, _, _, _ = runKF(y, A, C, Q, R, Z_0, V_0, use_numba=use_numba)
     Zsmooth = Zsmooth.T
