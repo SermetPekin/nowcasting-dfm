@@ -59,6 +59,7 @@ def run(X: np.ndarray, Spec: LoadSpec, run_options: Optional[Options] = None) ->
         run_options.threshold,
         max_iter=run_options.max_iter,
         use_numba=run_options.use_numba,
+        verbose = run_options.verbose  
     )
     res_object = ResultObject(Res, Spec, run_options)
     with open(str(OUT_FILE), "wb") as handle:
@@ -68,7 +69,8 @@ def run(X: np.ndarray, Spec: LoadSpec, run_options: Optional[Options] = None) ->
     return res_object
 
 
-def get_with_options(options: Options, verbose: bool = True) -> Tuple[LoadSpec, np.ndarray, np.ndarray, np.ndarray]:
+def get_with_options(options: Options, verbose: bool = None) -> Tuple[LoadSpec, np.ndarray, np.ndarray, np.ndarray]:
+    verbose = options.verbose if verbose is None  else verbose 
     Spec : LoadSpec = LoadSpec(options.spec_file_name)
     datafile = options.root / os.path.join(
         "data", options.country, options.vintage_date + ".xls"
@@ -80,7 +82,8 @@ def get_with_options(options: Options, verbose: bool = True) -> Tuple[LoadSpec, 
         summarize(X, Time, Spec)
     return Spec, X, Time, Z
 
-def run_with_options(options: Options, verbose = True) -> ResultObject:
+def run_with_options(options: Options, verbose: bool = None) -> ResultObject:
+    verbose = options.verbose if verbose is None  else verbose 
     Spec, X, Time, Z = get_with_options(options, verbose)
     ResObject: ResultObject = run(X, Spec, options)
     return ResObject
