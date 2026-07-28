@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 from pathlib import Path
 
-PROJECT_ROOT = Path(".") #  Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
 DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
 
