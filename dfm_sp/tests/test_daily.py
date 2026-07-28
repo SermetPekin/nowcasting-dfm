@@ -5,22 +5,20 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-import numpy as np
 import pytest
 from pathlib import Path
 
-PROJECT_ROOT =  Path(__file__).resolve().parent.parent.parent
+from dfm_sp import Options, daily_report
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
 DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
-DATA_FOLDER = None # PROJECT_ROOT / "data" / "US" 
+DATA_FOLDER = None  # PROJECT_ROOT / "data" / "US"
 
 pytestmark = pytest.mark.skipif(
     not SPEC_FILE.exists() or not DATA_FILE.exists(),
     reason="Sample data not present — run download_sample_data() first.",
 )
-
-from dfm_sp import Options, daily_report
-from pathlib import Path
 
 out_folder = Path(".") / "out"
 root = Path(".")
@@ -28,13 +26,14 @@ root = Path(".")
 country = "US"
 max_iter = 2
 threshold = 1e-3
-spec_file_name = SPEC_FILE 
+spec_file_name = SPEC_FILE
 sample_start = "2005-01-01"
 
 vintage = "auto"
 
 plot1_series = ("INDPRO", "HOUST", "PAYEMS", "CPIAUCSL", "UNRATE")
 plot2_series = (("INDPRO", "HOUST"), ("PAYEMS", "CPIAUCSL"), ("UNRATE", "INDPRO"))
+
 
 def test_daily(capsys):
     with capsys.disabled():
@@ -50,7 +49,7 @@ def test_daily(capsys):
             plot2_series=plot2_series,
             out_folder=out_folder,
             use_cache=False,
-            data_folder= DATA_FOLDER
+            data_folder=DATA_FOLDER,
         )
 
         print(options)

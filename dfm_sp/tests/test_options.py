@@ -5,8 +5,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-import pytest
-from pathlib import Path
 from dfm_sp.sp_classes import Options
 
 
@@ -44,9 +42,9 @@ def test_options_copy_method():
     assert opt_new.max_iter == 5000
 
     opt2 = Options(
-            vintage=-1,
-            country="US",
-            spec_file_name="Spec_US_example.xls",
-            max_iter=5000,
-        )
-    assert isinstance(opt2.vintage_date , str) 
+        vintage=-1,
+        country="US",
+        spec_file_name="Spec_US_example.xls",
+        max_iter=5000,
+    )
+    assert isinstance(opt2.vintage_date, str)

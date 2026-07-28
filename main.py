@@ -2,7 +2,6 @@ from pathlib import Path
 
 # -------------------------------------------------Libraries
 # Libs
-import pandas as pd
 
 # ================================================================================
 # DFM Spkn edition
@@ -15,13 +14,12 @@ from dfm_sp import (
     plot_loglik,
     plot_common,
     run,
-    plot_projection_x_over_y,
-    plot_prediction_intervals,
 )
 from dfm_sp.sp_plots import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,
+    plot_projection_x_over_y,
 )
 from dfm_sp import plot_factor_loadings
 from dfm_sp import generate_html_report

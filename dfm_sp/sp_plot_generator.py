@@ -5,8 +5,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.pyplot as plt
 from dfm_sp.sp_plots import (
     plot_loglik,
     plot_common,
@@ -14,7 +12,6 @@ from dfm_sp.sp_plots import (
     plot_transformed_data,
 )
 from dfm_sp.sp_plots_blocks import plot_block_contributions
-from dfm_sp.sp_news import plot_news_waterfall
 
 from dfm_sp.sp_plots import (
     plot_factor_contribution,

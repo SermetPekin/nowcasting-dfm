@@ -5,11 +5,10 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-
 import hashlib
 import pickle
 from functools import wraps
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
 from pathlib import Path
 import os
 
@@ -97,25 +96,23 @@ class CacheHandler:
                 if os.path.exists(cache_path):
                     if self._is_cache_valid(cache_path, eff_max_age_seconds):
                         if eff_verbose:
-                            print(f"[Valid Cache]")
+                            print("[Valid Cache]")
 
                         with open(cache_path, "rb") as f:
-                            if verbose:
+                            if eff_verbose:
                                 print("<CACHE RESULT>")
                             return pickle.load(f)
 
-            if verbose:
+            if eff_verbose:
                 print("[Found No Cache. Will make a new request!]")
             # Call the actual function
             result = func(*args, **kwargs)
-            # TODO
-            # TODO check if proper result heree
             # Store in memory
             self._cache[hash_key] = result
 
             # =============  Sonucu yazma kısmı
             # Store persistently if enabled
-            if self._persistent:
+            if self._persistent and result is not None:
 
                 cache_path = self._get_cache_path(
                     effective_cache_dir, func.__name__, hash_key

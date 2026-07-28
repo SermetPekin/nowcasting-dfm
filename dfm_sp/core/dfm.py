@@ -184,7 +184,7 @@ def dfm(
         _pbar.set_postfix({"loglik": f"{loglik:.4f}"})
     _pbar.close()
     if num_iter < max_iter:
-        
+
         print("Successful: Convergence at {} iterations".format(num_iter))
     else:
         print("Stopped because maximum iterations reached")
@@ -213,7 +213,7 @@ def dfm(
     # Table with names and factor loadings
     nQ = Par["nQ"]
     nM = Spec.SeriesID.shape[0] - nQ
-    nLags = max(Par["p"], 5)
+    _nLags = max(Par["p"], 5)
     nFactors = np.sum(Par["r"])
     if verbose:
         print("\n Table 4: Factor Loadings for Monthly Series")
@@ -1138,14 +1138,14 @@ def SKF(Y, A, C, Q, R, Z_0, V_0, use_numba=True):
     if len(valid_idx) == 0:
         S["k_t"] = np.zeros((m, m))
     else:
-        Y_t = y_col[valid_idx].reshape(-1, 1)
+        _Y_t = y_col[valid_idx].reshape(-1, 1)
         C_t = C[valid_idx, :]
         R_t = np.zeros((len(valid_idx), len(valid_idx)))
         for i, idx1 in enumerate(valid_idx):
             for j, idx2 in enumerate(valid_idx):
                 R_t[i, j] = R[idx1, idx2]
 
-        last_Z = np.matmul(A, S["Zm"][:, nobs - 1])
+        _last_Z = np.matmul(A, S["Zm"][:, nobs - 1])
         last_V = np.matmul(np.matmul(A, S["Vm"][nobs - 1]), A.T) + Q
         last_V = 0.5 * (last_V + last_V.T)
 

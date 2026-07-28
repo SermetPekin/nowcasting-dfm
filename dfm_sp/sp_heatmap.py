@@ -5,26 +5,11 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-import numpy as np
 import plotly.graph_objects as go
-import pandas as pd
-from typing import Optional
-from typing import Iterable
-import numpy as np
-from datetime import datetime as dt
-from pathlib import Path
 
 # -------------------------------------------------Libraries
 # Libs
-import pandas as pd
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-from dfm_sp.sp_classes import Options, ResultObject
-from dfm_sp.sp_utils import get_attr_from_spec
-import numpy as np
-import plotly.graph_objects as go
-import pandas as pd
-from scipy.stats import norm
+from dfm_sp.sp_classes import ResultObject
 
 
 def plot_factor_loadings(res_obj: ResultObject, show: bool = True) -> go.Figure:
