@@ -59,9 +59,9 @@ class Options:
     vintage: Optional[str] = "auto"
     data_folder: Optional[str] = None
     out_folder: Union[Path, str] = Path(".")
-    use_cache: bool = True   
-    use_numba: bool = False 
-    verbose : bool = True 
+    use_cache: bool = True
+    use_numba: bool = False
+    verbose: bool = True
     frozen: Optional[FrozenOptions] = None
     plot1_series: Tuple[str] = tuple(
         ["INDPRO", "HOUST", "PAYEMS", "CPIAUCSL", "UNRATE"]
@@ -95,6 +95,10 @@ class Options:
             data_folder=self.data_folder,
         )
 
+    def get_verbose(self, verbose: Optional[bool] = None)->bool:
+        verbose = self.verbose if verbose is None else verbose 
+        return verbose 
+    
     def name_format(self):
         if self.max_iter < 5000:
             ek = f"TEST-RUN-with-max_iter{self.max_iter}"
@@ -111,7 +115,6 @@ class Options:
         obj_bytes = pickle.dumps(self.frozen)
         return hashlib.sha256(obj_bytes).hexdigest()[:7]
 
-
     @property
     def vintage_date(self):
         vintage = self.vintage
@@ -126,7 +129,7 @@ class Options:
             return get_latest(self.data_folder, index=vintage)
 
         return vintage
-    
+
     def check(self):
         if self.max_iter < 5000:
             print(

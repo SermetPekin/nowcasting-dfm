@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
 DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
 
@@ -57,9 +57,9 @@ def test_loglik_finite(pipeline_result):
     loglik_history = res_object.result["loglik"]
     assert len(loglik_history) > 1
     actual_values = loglik_history[1:]  # skip the -inf sentinel at index 0
-    assert all(np.isfinite(v) for v in actual_values), (
-        "Non-finite log-likelihood detected — numerical instability in EM."
-    )
+    assert all(
+        np.isfinite(v) for v in actual_values
+    ), "Non-finite log-likelihood detected — numerical instability in EM."
 
 
 def test_smoothed_state_shape(pipeline_result):
@@ -68,9 +68,9 @@ def test_smoothed_state_shape(pipeline_result):
     T = X.shape[0]
     x_sm = res_object.result["x_sm"]
     assert x_sm.shape[0] == T, "Smoothed state row count must match data rows"
-    assert x_sm.shape[1] == len(Spec.SeriesID), (
-        "Smoothed state column count must match number of series"
-    )
+    assert x_sm.shape[1] == len(
+        Spec.SeriesID
+    ), "Smoothed state column count must match number of series"
 
 
 def test_no_allnan_columns(pipeline_result):
@@ -78,6 +78,6 @@ def test_no_allnan_columns(pipeline_result):
     _, _, _, _, _, res_object = pipeline_result
     x_sm = res_object.result["x_sm"]
     all_nan_cols = np.all(np.isnan(x_sm), axis=0)
-    assert not np.any(all_nan_cols), (
-        f"Columns {np.where(all_nan_cols)[0].tolist()} are all-NaN in smoothed output."
-    )
+    assert not np.any(
+        all_nan_cols
+    ), f"Columns {np.where(all_nan_cols)[0].tolist()} are all-NaN in smoothed output."
