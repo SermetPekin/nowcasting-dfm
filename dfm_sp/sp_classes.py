@@ -59,8 +59,9 @@ class Options:
     vintage: Optional[str] = "auto"
     data_folder: Optional[str] = None
     out_folder: Union[Path, str] = Path(".")
-    use_cache: bool = True  # Added so user can force re-run
-    use_numba: bool = False
+    use_cache: bool = True   
+    use_numba: bool = False 
+    verbose : bool = True 
     frozen: Optional[FrozenOptions] = None
     plot1_series: Tuple[str] = tuple(
         ["INDPRO", "HOUST", "PAYEMS", "CPIAUCSL", "UNRATE"]
