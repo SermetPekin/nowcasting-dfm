@@ -1,6 +1,6 @@
 [project]
 name = "nowcasting-dfm"
-version = "0.1.7"
+version = "0.1.8"
 description = "Macroeconomic nowcasting via Dynamic Factor Models (DFM), extending the FRBNY framework (Qian & Bok) with a modern Python API: real-time vintage management, Kalman-based news decomposition, optional Numba acceleration, caching, and interactive Plotly visualizations."
 authors = [{ name = "Sermet Pekin", email = "sermet.pekin@gmail.com" }]
 readme = "README.md"
