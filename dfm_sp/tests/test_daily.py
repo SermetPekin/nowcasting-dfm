@@ -9,9 +9,10 @@ import numpy as np
 import pytest
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(".") #  Path(__file__).parent.parent
 SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
 DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
+DATA_FOLDER = None # PROJECT_ROOT / "data" / "US" 
 
 from dfm_sp import Options, daily_report
 from pathlib import Path
@@ -44,6 +45,7 @@ def test_daily(capsys):
             plot2_series=plot2_series,
             out_folder=out_folder,
             use_cache=False,
+            data_folder= DATA_FOLDER
         )
 
         print(options)
