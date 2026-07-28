@@ -5,7 +5,14 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Exposed Public API
 from dfm_sp.sp_classes import Options, ResultObject
-from dfm_sp.core.load_spec import SpecConfig, LoadSpec, load_spec  # load_spec is a backward-compat alias
+from dfm_sp.core.load_spec import (
+    SpecConfig,
+    LoadSpec,
+    load_spec,
+)  # load_spec is a backward-compat alias
+
+from dfm_sp.sp_daily import daily_report 
+
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.dfm import dfm
 from dfm_sp.core.summarize import summarize
@@ -52,4 +59,5 @@ __all__ = [
     "load_data",
     "dfm",
     "summarize",
+    "daily_report" , 
 ]
