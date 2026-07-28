@@ -3,6 +3,7 @@ import warnings
 # Suppress annoying standard warnings during import
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+from pathlib import Path 
 # Exposed Public API
 from dfm_sp.sp_classes import Options, ResultObject
 from dfm_sp.core.load_spec import (
