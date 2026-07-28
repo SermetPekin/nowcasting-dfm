@@ -36,6 +36,7 @@ from dfm_sp.sp_vintage_generator import VintageMaker, FixedDayRule, WeekdayRule
 from dfm_sp.sp_download import download_sample_data
 
 __all__ = [
+    "Path",
     # Core DFM Loop
     "Options",
     "SpecConfig",
