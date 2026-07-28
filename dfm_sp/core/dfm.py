@@ -6,7 +6,6 @@ Copyright (c) 2019, Galib Khan (independent Python translation, not affiliated w
 Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 """
 
-
 # -------------------------------------------------Libraries
 import numpy as np
 import pandas as pd
@@ -18,14 +17,23 @@ from scipy.linalg import block_diag
 # -------------------------------------------------Dynamic Factor Modeling functions
 from typing import Dict, Any, Union
 from .load_spec import LoadSpec, SpecConfig
+
 try:
     from tqdm import tqdm as _tqdm
 except ImportError:  # tqdm is optional; fall back to a no-op stub
+
     class _tqdm:  # type: ignore[no-redef]
-        def __init__(self, *args, **kwargs): pass
-        def update(self, n=1): pass
-        def set_postfix(self, *args, **kwargs): pass
-        def close(self): pass
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def update(self, n=1):
+            pass
+
+        def set_postfix(self, *args, **kwargs):
+            pass
+
+        def close(self):
+            pass
 
 
 def dfm(
@@ -97,14 +105,16 @@ def dfm(
         np.int64
     )  # Number of common factors for each block
     # Par.r(1) =2;
-    
+
     # Display blocks
-    if verbose : 
-        
+    if verbose:
+
         print("\n\n\n")
         print("Table 3: Block Loading Structure")
         print(
-            pd.DataFrame(data=Spec.Blocks, index=Spec.SeriesName, columns=Spec.BlockNames)
+            pd.DataFrame(
+                data=Spec.Blocks, index=Spec.SeriesName, columns=Spec.BlockNames
+            )
         )
         print("\n")
         print("Estimating the dynamic factor model (DFM) \n\n")
@@ -155,7 +165,7 @@ def dfm(
     y_est, _ = remNaNs_spline(xNaN.copy(), optNaN)
     y_est = y_est.T
     # max_iter = 5000
-    _pbar = _tqdm(total=max_iter, desc="EM", unit="iter", disable=not verbose)
+    _pbar = _tqdm(total=max_iter, desc="EM", unit="iter")
     while num_iter < max_iter and not converged:  # Loop until converges or max iter.
         # Applying EM algorithm
         C_new, R_new, A_new, Q_new, Z_0, V_0, loglik = EMstep(
@@ -206,7 +216,7 @@ def dfm(
     nM = Spec.SeriesID.shape[0] - nQ
     nLags = max(Par["p"], 5)
     nFactors = np.sum(Par["r"])
-    if verbose : 
+    if verbose:
         print("\n Table 4: Factor Loadings for Monthly Series")
         print(
             pd.DataFrame(
@@ -226,8 +236,8 @@ def dfm(
     # Table with AR model on factors (factors with AR parameter and variance of residuals)
     A_terms = np.diag(Res["A"]).copy()
     Q_terms = np.diag(Res["Q"]).copy()
-    if verbose : 
-        
+    if verbose:
+
         print("\n Table 6: Autoregressive Coefficients on Factors")
         print(
             pd.DataFrame(
@@ -254,7 +264,7 @@ def dfm(
             np.arange(nFactors * 5 + nM, Q_len, 5),
         ]
     )
-    if verbose : 
+    if verbose:
         print(
             pd.DataFrame(
                 {
