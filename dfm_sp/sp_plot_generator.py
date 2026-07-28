@@ -5,7 +5,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 from dfm_sp.sp_plots import (
@@ -21,6 +20,8 @@ from dfm_sp.sp_plots import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,
+    plot_covariance_network,
+    plot_em_step_deltas,
 )
 from dfm_sp.sp_heatmap import plot_factor_loadings
 from io import BytesIO
@@ -44,6 +45,8 @@ def generate_html_report(ResObject, Time, X, Z, options, output_path=None):
         ("Prediction Intervals", plot_prediction_intervals(ResObject, Time, show=SHOW)),
         ("Factor Contribution", plot_factor_contribution(ResObject, show=SHOW)),
         ("Factor Loadings", plot_factor_loadings(ResObject, show=SHOW)),
+        ("Covariance Network", plot_covariance_network(ResObject, show=SHOW)),
+        ("EM Step Deltas", plot_em_step_deltas(ResObject, show=SHOW)),
         # Plot Block Contributions specifically passing the Spec object and a default target (first target series if any)
         (
             "Block Contributions",
