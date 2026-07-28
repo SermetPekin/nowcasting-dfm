@@ -30,7 +30,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./dfm_sp/tests
-        run: uv run pytest dfm_sp/tests/ -v
+        run: uv run pytest -v
 
   build:
     name: Build package
