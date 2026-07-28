@@ -29,6 +29,7 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Run tests
+        working-directory: ./dfm_sp/tests
         run: uv run pytest dfm_sp/tests/ -v
 
   build:
