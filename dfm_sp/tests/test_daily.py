@@ -5,6 +5,14 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
+import numpy as np
+import pytest
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
+DATA_FILE = PROJECT_ROOT / "data" / "US" / "2016-06-29.xls"
+
 from dfm_sp import Options, daily_report
 from pathlib import Path
 
@@ -14,7 +22,7 @@ root = Path(".")
 country = "US"
 max_iter = 2
 threshold = 1e-3
-spec_file_name = "Spec_US_example.xls"
+spec_file_name = SPEC_FILE 
 sample_start = "2005-01-01"
 
 vintage = "auto"
