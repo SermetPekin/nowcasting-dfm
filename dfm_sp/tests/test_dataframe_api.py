@@ -114,7 +114,7 @@ def test_load_data_pandas_sample_truncation():
     spec = _StubSpec(series_ids)
 
     X_full, Time_full, _ = load_data_pandas(df, spec, date_col="Date")
-    # dropData accepts a single cutoff — rows with Time >= sample are kept
+    # dropData accepts a single cutoff — rows with Time >= sample_start are kept
     X_trunc, Time_trunc, _ = load_data_pandas(
         df, spec, date_col="Date", sample="2001-06-01"
     )
@@ -163,7 +163,9 @@ def test_run_with_dataframe_result_keys():
         use_numba=False,
     )
 
-    result_obj = run_with_dataframe(df, Spec, run_options=options, verbose=False)
+    result_obj = run_with_dataframe(
+        df, Spec, run_options=options, sample_start="2000-01-01", verbose=False
+    )
 
     for key in ("x_sm", "X_sm", "Z", "C", "R", "A", "Q", "loglik"):
         assert key in result_obj.result, f"Missing key '{key}' in DFM result"
@@ -171,13 +173,14 @@ def test_run_with_dataframe_result_keys():
 
 @needs_sample_data
 def test_run_with_dataframe_matches_file_pipeline(pipeline_result):
-    """run_with_dataframe must produce the same X matrix as the file-based pipeline."""
+    """DataFrame path with explicit sample= produces same X as the file-based pipeline."""
     from dfm_sp.core.load_data_pandas import load_data_pandas
 
     options, Spec, X_ref, Time_ref, Z_ref, _ = pipeline_result
 
     df = _load_vintage_as_dataframe()
-    # Pass the same sample_start used by the file-based pipeline so row counts match
+    # Explicitly pass the same sample_start — without it, no truncation is applied
+    # (which is the correct default for the DataFrame API).
     X_df, Time_df, Z_df = load_data_pandas(
         df, Spec, date_col="Date", sample=options.sample_start
     )
@@ -209,7 +212,9 @@ def test_run_with_dataframe_loglik_finite():
         use_numba=False,
     )
 
-    result_obj = run_with_dataframe(df, Spec, run_options=options, verbose=False)
+    result_obj = run_with_dataframe(
+        df, Spec, run_options=options, sample_start="2000-01-01", verbose=False
+    )
     loglik = result_obj.result["loglik"]
 
     assert len(loglik) > 1
