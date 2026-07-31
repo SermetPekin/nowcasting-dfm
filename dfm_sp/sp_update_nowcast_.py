@@ -49,7 +49,7 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
         y_old=y_old,
         y_new=y_new,
         vintage_old=options.vintage_date,
-        vintage_new=new_date,
+        vintage_new=options_new.vintage_date,
         target_series=f"{series} - {str(period).upper() }",
     )
     if show:
