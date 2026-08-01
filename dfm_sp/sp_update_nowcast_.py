@@ -6,6 +6,7 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 """
 
 import numpy as np
+import pandas as pd 
 
 from dfm_sp.core.update_Nowcast import update_nowcast
 from dfm_sp.sp_classes import Options
