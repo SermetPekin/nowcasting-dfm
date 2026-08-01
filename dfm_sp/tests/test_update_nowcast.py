@@ -207,3 +207,64 @@ def test_write_result_dict_real_impacts_sorted_by_absolute_impact(update_result,
         assert np.all(abs_impacts[:-1] >= abs_impacts[1:]), (
             "Real Impacts sheet is not sorted by absolute impact (descending)"
         )
+
+
+# ---------------------------------------------------------------------------
+# Column order invariance
+# ---------------------------------------------------------------------------
+
+@needs_data
+def test_column_order_does_not_affect_transformed_data():
+    """Shuffling data columns must produce an identical transformed matrix.
+
+    sortData() inside load_data_pandas reorders columns to match the spec,
+    so the order in which columns arrive should have no effect on X, Time, Z.
+    """
+    from dfm_sp.core.load_spec import LoadSpec
+    from dfm_sp.core.load_data_pandas import load_data_pandas
+
+    Spec = LoadSpec(str(SPEC_FILE))
+    df = pd.read_excel(str(DATA_OLD))
+
+    # Canonical order
+    X_ref, Time_ref, Z_ref = load_data_pandas(df.copy(), Spec, date_col="Date")
+
+    # Shuffle all non-Date columns with a fixed seed for reproducibility
+    rng = np.random.default_rng(42)
+    series_cols = [c for c in df.columns if c != "Date"]
+    shuffled_cols = rng.permutation(series_cols).tolist()
+    df_shuffled = df[["Date"] + shuffled_cols]
+
+    X_shuf, Time_shuf, Z_shuf = load_data_pandas(df_shuffled, Spec, date_col="Date")
+
+    assert X_ref.shape == X_shuf.shape, "Shape changed after column shuffle"
+
+    # Compare where both are non-NaN
+    mask = ~np.isnan(X_ref) & ~np.isnan(X_shuf)
+    np.testing.assert_allclose(
+        X_ref[mask], X_shuf[mask], rtol=1e-12,
+        err_msg="Transformed data differs when input column order is shuffled",
+    )
+
+
+@needs_data
+def test_reversed_column_order_does_not_affect_transformed_data():
+    """Reversing the column order must also produce identical results."""
+    from dfm_sp.core.load_spec import LoadSpec
+    from dfm_sp.core.load_data_pandas import load_data_pandas
+
+    Spec = LoadSpec(str(SPEC_FILE))
+    df = pd.read_excel(str(DATA_OLD))
+
+    X_ref, _, _ = load_data_pandas(df.copy(), Spec, date_col="Date")
+
+    series_cols = [c for c in df.columns if c != "Date"]
+    df_reversed = df[["Date"] + series_cols[::-1]]
+
+    X_rev, _, _ = load_data_pandas(df_reversed, Spec, date_col="Date")
+
+    mask = ~np.isnan(X_ref) & ~np.isnan(X_rev)
+    np.testing.assert_allclose(
+        X_ref[mask], X_rev[mask], rtol=1e-12,
+        err_msg="Transformed data differs when input column order is reversed",
+    )
