@@ -56,7 +56,7 @@ class Options:
     sample_start: str = "2000-01-01"
     vintage: Optional[str] = "auto"
     data_folder: Optional[str] = None
-    data_file_name_format : None | callable = None  # e.g. lambda options : f"{options.vintage}-snap.xls" 
+    data_file_name_format : Optional[callable] = None  # e.g. lambda options : f"{options.vintage}-snap.xls" 
     out_folder: Union[Path, str] = Path(".")
     use_cache: bool = True
     use_numba: bool = False
