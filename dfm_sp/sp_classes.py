@@ -56,6 +56,7 @@ class Options:
     sample_start: str = "2000-01-01"
     vintage: Optional[str] = "auto"
     data_folder: Optional[str] = None
+    data_file_name_format : None | callable = None  # e.g. lambda options : f"{options.vintage}-snap.xls" 
     out_folder: Union[Path, str] = Path(".")
     use_cache: bool = True
     use_numba: bool = False
@@ -73,6 +74,7 @@ class Options:
             self.root = Path(self.root)
         if self.data_folder is None:
             self.data_folder = self.root / "data" / self.country
+            
         if isinstance(self.spec_file_name, str):
             self.spec_file_name = self.root / self.spec_file_name
         if isinstance(self.sample_start, str):
