@@ -41,9 +41,14 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
         X_old, X_new, Time, Spec, Res_base, series, period, vintage_old, vintage_new
     )
 
+    if not np.any(data_released):
+        raise ValueError("No new Data! [Line 45]")
+            
     real_impacts = news_table.iloc[np.where(data_released)[0], :]
     print(real_impacts)
-
+    if real_impacts.empty : 
+        raise ValueError(" No forecast was made ")
+        
     fig = plot_news_waterfall(
         news_table=real_impacts,
         y_old=y_old,
