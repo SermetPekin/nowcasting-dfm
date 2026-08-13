@@ -9,9 +9,10 @@ from dataclasses import dataclass
 from typing import Any
 from pathlib import Path
 import pandas as pd
-from dfm_sp.sp_utils import get_latest
 from typing import Tuple, Optional, Union
-
+import numpy as np 
+# 
+from dfm_sp.sp_utils import get_latest
 
 # ===================================== FrozenOptions =================================
 @dataclass(frozen=True)
@@ -171,3 +172,42 @@ class ResultObject:
     result: Any
     spec: Any
     options: Options
+
+    def write(self, filename=None) : 
+        if filename is None : 
+            filename = f"Results-Vintage[{self.options.vintage_date}].xlsx"
+        with pd.ExcelWriter(filename) as writer:
+            self.info().to_excel(writer, sheet_name="Info", index=False)
+            for k, v in self.result.items():
+                if isinstance(v, np.ndarray):
+                    d = pd.DataFrame(v)
+                    d.to_excel(writer, sheet_name=str(k))
+                    
+    def info(self):
+        template = """
+    #   Res - structure of model results with the following fields
+    #       . X_sm | Kalman-smoothed data where missing values are replaced by their expectation
+    #       . Z | Smoothed states. Rows give time, and columns are organized according to Res.C.
+    #       . C | Observation matrix. The rows correspond
+    #          to each series, and the columns are organized as shown below:
+    #         - 1-20: These columns give the factor loa dings. For example, 1-5
+    #              give loadings for the first block and are organized in
+    #              reverse-chronological order (f^G_t, f^G_t-1, f^G_t-2, f^G_t-3,
+    #              f^G_t-4). Columns 6-10, 11-15, and 16-20 give loadings for
+    #              the second, third, and fourth blocks respectively.
+    #       .R: Covariance for observation matrix residuals
+    #       .A: Transition matrix. This is a square matrix that follows the
+    #      same organization scheme as Res.C's columns. Identity matrices are
+    #      used to account for matching terms on the left and righthand side.
+    #      For example, we place an I4 matrix to account for matching
+    #      (f_t-1; f_t-2; f_t-3; f_t-4) terms.
+    #       .Q: Covariance for transition equation residuals.
+    #       .Mx: Series mean
+    #       .Wx: Series standard deviation
+    #       .Z_0: Initial value of state
+    #       .V_0: Initial value of covariance matrix
+    #       .r: Number of common factors for each block
+    #       .p: Number of lags in transition equation
+        """
+        lines = [line.strip() for line in template.split('\n') if line.strip()]
+        return pd.DataFrame(lines, columns=["Info"])
