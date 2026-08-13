@@ -18,7 +18,7 @@ cache_ = CacheHandler(cache_dir=CACHE_DIR)
 cache_.enable_persistent(True)
 
 
-def sp_update_nowcast(options, new_date: str, series: str, period: str, show=True):
+def sp_update_nowcast(options, new_date: str, series: str, period: str, show=True, write=True):
 
     vintage_old = options.vintage_date
     vintage_new = new_date
@@ -44,8 +44,9 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
     if not np.any(data_released):
         raise ValueError("No new Data! [Line 45]")
             
-    real_impacts = news_table.iloc[np.where(data_released)[0], :]
+    real_impacts : pd.DataFrame = news_table.iloc[np.where(data_released)[0], :]
     print(real_impacts)
+    
     if real_impacts.empty : 
         raise ValueError(" No forecast was made ")
         
@@ -60,13 +61,28 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
     if show:
         fig.show()
 
-    return {
+    result_dict =  {
         "fig": fig,
         "real_impacts": real_impacts,
         "data_released": data_released,
         "news_table": news_table,
     }
+    if write : 
+        write_result_dict(result_dict, "out_impacts")
+    return result_dict
 
+def write_result_dict(result_dict:dict, file_name = "out_impacts"):
+    """write outputs of update nowcast """
+    data_released = pd.DataFrame(result_dict["data_released"])
+    news_table = result_dict["news_table"]
+    real_impacts = result_dict["real_impacts"] 
+    real_impacts['Absolute Impact'] = real_impacts['Impact'].abs()   
+    real_impacts = real_impacts.sort_values(by='Absolute Impact', ascending=False)
+    
+    with pd.ExcelWriter(f"{file_name}.xlsx", engine="openpyxl") as writer:
+        data_released.to_excel(writer, sheet_name="Data Released", index=True)
+        news_table.to_excel(writer, sheet_name="News Table", index=True)
+        real_impacts.to_excel(writer, sheet_name="Real Impacts", index=True)
 
 def _usage():
     series = "GDPC1"
