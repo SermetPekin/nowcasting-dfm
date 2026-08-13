@@ -18,6 +18,7 @@ print(f"Loading Base Line Model for vintage: {vintage_old}")
 Spec, X_old, _, Z_old = get_with_options(options_baseline)
 
 ResObject = run(X_old, Spec, options_baseline)
+ResObject.write()
 Res = ResObject.result
 
 print(f"Loading Updated Data for vintage: {vintage_new}")

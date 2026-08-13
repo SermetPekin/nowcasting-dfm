@@ -39,4 +39,4 @@ options = Options(
 print(options)
 
 print("Running daily report...")
-daily_report(options)
+daily_report(options, write=True) # will create html report and create an excel file that includes multiple sheets for Results.  
