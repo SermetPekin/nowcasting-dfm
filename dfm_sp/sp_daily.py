@@ -24,7 +24,7 @@ from dfm_sp.sp_heatmap import plot_factor_loadings
 from dfm_sp.sp_plot_generator import generate_html_report
 
 
-def daily_report(options: Options | None = None):
+def daily_report(options: Options | None = None, write = True):
     ROOT = Path(".")
 
     if options is None:
@@ -32,6 +32,9 @@ def daily_report(options: Options | None = None):
     Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
     generate_html_report(ResObject, Time, X, Z, options)
+    if write : 
+        ResObject.write()
+    return ResObject 
 
 
 def main_interactive():
