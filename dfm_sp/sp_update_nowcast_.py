@@ -69,7 +69,8 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
         "news_table": news_table,
     }
     if write : 
-        write_result_dict(result_dict, "out_impacts")
+        file_name = f"[Nowcast Update]-impacts-{options.country}-{vintage_new}-from-{vintage_old}.xlsx"
+        write_result_dict(result_dict, file_name)
     return result_dict
 
 def write_result_dict(result_dict:dict, file_name = "out_impacts"):
