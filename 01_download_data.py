@@ -1,8 +1,7 @@
 """
-BSD 3-Clause License
-
-Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
-
+Step 1 — Download sample data
+Run this once before any other example.
+Downloads US macro vintage data into the data/ directory.
 """
 
 from dfm_sp import download_sample_data

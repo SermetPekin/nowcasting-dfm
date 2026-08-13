@@ -1,8 +1,14 @@
+"""
+Step 4b — Nowcast update (core API)
+Same goal as 04_nowcast_update.py but uses the lower-level core functions
+directly — useful if you need fine-grained control over the update step.
+"""
+
 import os
-from dfm_sp.core.load_data import load_data
-from dfm_sp.core.update_Nowcast import update_nowcast
-from dfm_sp import Options
-from dfm_sp import get_with_options, run
+
+from dfm_sp import Options, get_with_options, run
+from dfm_sp import load_data
+from dfm_sp import update_nowcast
 
 series = "GDPC1"  # Nowcasting real GDP
 period = "2016q4"

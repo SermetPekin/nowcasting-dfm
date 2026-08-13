@@ -79,10 +79,12 @@ result["fig"].show()  # interactive Plotly waterfall chart
 * `dfm_sp/` : Core package encompassing the execution engines and analytics.
     * `core/` : Kalman filtering, spline imputation, EM-step mathematics, and data loaders.
     * `tests/` : Component tests simulating missing economic data and ragged tails.
-* `examples/` : Ready-to-run scripts and configuration examples (CSV pipeline, custom config, spec generation).
-* `notebooks/` : Jupyter notebooks covering classic usage, news waterfalls, pseudo-vintages, and weekly integration.
-* `main.py` : Execution script illustrating the estimation of a standard panel and generating visualization artifacts.
-* `example_Nowcast.py` : Demonstration of out-of-sample prediction mechanics (e.g., real GDP growth).
+* `01_download_data.py` : Download sample US vintage data (run once, before anything else).
+* `02_run_basic_model.py` : Fit the DFM and explore key plots.
+* `03_run_full_analysis.py` : Full pipeline with HTML report generation.
+* `04_nowcast_update.py` : Quantify the impact of a new data release on the GDP nowcast (high-level API).
+* `04b_nowcast_update_core_api.py` : Same as above using the lower-level core API.
+* `05_daily_report.py` : Recurring daily run — writes HTML report and Excel workbook.
 
 ## Attribution & Notice
 

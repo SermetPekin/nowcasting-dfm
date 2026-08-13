@@ -1,31 +1,36 @@
+"""
+Step 3 — Full analysis with HTML report
+Runs the DFM and generates a standalone HTML report containing
+factor contributions, likelihood convergence, and factor loadings.
+Switch to main_interactive() to display all plots in the browser instead.
+"""
+
 from pathlib import Path
 
-# -------------------------------------------------Libraries
-# Libs
-
-# ================================================================================
-# DFM Spkn edition
 from dfm_sp import (
     Options,
-    get_with_options,
-    plot_with_options,
-    plot_transformed_data,
     ResultObject,
-    plot_loglik,
+    generate_html_report,
+    get_with_options,
     plot_common,
+    plot_loglik,
+    plot_transformed_data,
+    plot_with_options,
     run,
 )
-from dfm_sp.sp_plots import (
+from dfm_sp import (
     plot_factor_contribution,
     plot_factors_with_series,
     plot_prediction_intervals,
     plot_projection_x_over_y,
+    plot_factor_loadings
 )
-from dfm_sp import plot_factor_loadings
-from dfm_sp import generate_html_report
 
 
-# ================================================================================
+ROOT = Path(".")
+options = Options(ROOT, max_iter=5000, use_cache=False)
+
+
 def main():
     Spec, X, Time, Z = get_with_options(options)
     ResObject: ResultObject = run(X, Spec, options)
@@ -48,7 +53,5 @@ def main_interactive():
         plot_projection_x_over_y(ResObject, X, Z, Time, items, show=SHOW)
 
 
-ROOT = Path(".")
-options = Options(ROOT, max_iter=5000, use_cache=False)
 main()
 # main_interactive()

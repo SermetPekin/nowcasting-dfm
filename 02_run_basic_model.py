@@ -1,7 +1,12 @@
+"""
+Step 2 — Basic model run
+Loads a vintage dataset, fits the DFM, summarises the data,
+and produces a set of exploratory Plotly figures.
+"""
+
 import pandas as pd
 
-from dfm_sp import Options, get_with_options, run
-from dfm_sp.core.summarize import summarize
+from dfm_sp import Options, get_with_options, run, summarize
 from dfm_sp.sp_plots import (
     plot_transformed_data_one,
     plot_loglik,

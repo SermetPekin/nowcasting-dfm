@@ -8,8 +8,15 @@ from dfm_sp.core.load_spec import (
     load_spec,
 )  # load_spec is a backward-compat alias
 
-from dfm_sp.sp_daily import daily_report
+from dfm_sp.core.update_Nowcast import update_nowcast
 
+from dfm_sp.sp_daily import daily_report
+from dfm_sp.sp_plots import (
+    plot_factor_contribution,
+    plot_factors_with_series,
+    plot_prediction_intervals,
+    plot_projection_x_over_y,
+)
 from dfm_sp.core.load_data import load_data
 from dfm_sp.core.load_data_pandas import load_data_pandas
 from dfm_sp.core.dfm import dfm
