@@ -180,6 +180,8 @@ class ResultObject:
     def write(self, filename=None):
         if filename is None:
             filename = f"Results-{self.options.country}-Vintage[{self.options.vintage_date}].xlsx"
+        else : 
+            filename = f"{filename}.xlsx" if not filename.endswith(".xlsx") else filename
         with pd.ExcelWriter(filename) as writer:
             self.info().to_excel(writer, sheet_name="Info", index=False)
             for k, v in self.result.items():

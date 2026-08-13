@@ -27,5 +27,5 @@ dfm_sp/.DS_Store
 
 *.html 
 
-TransformedData.xlsx
+TransformedData*.xlsx
 *.pickle

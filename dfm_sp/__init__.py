@@ -39,6 +39,9 @@ from dfm_sp.sp_vintage_generator import VintageMaker, FixedDayRule, WeekdayRule
 # Data download helper
 from dfm_sp.sp_download import download_sample_data
 
+# FRED-MD / FRED-QD integration (McCracken & Ng 2016)
+from dfm_sp.sp_fredmd import load_fredmd_vintage, load_fredmd_file, fredmd_current_vintage
+
 
 import warnings
 
@@ -75,6 +78,9 @@ __all__ = [
     "summarize",
     "daily_report",
     "download_sample_data",
+    "load_fredmd_vintage",
+    "load_fredmd_file",
+    "fredmd_current_vintage",
     "run_with_options",
     "run_with_dataframe",
     "sp_update_nowcast",
