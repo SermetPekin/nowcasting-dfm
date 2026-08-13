@@ -31,6 +31,7 @@ needs_sample_data = pytest.mark.skipif(
 # Minimal spec stub — avoids loading real files for pure unit tests
 # ---------------------------------------------------------------------------
 
+
 class _StubSpec:
     """Minimal spec object accepted by load_data_pandas."""
 
@@ -47,8 +48,10 @@ def _make_synthetic_df(n_series=3, n_periods=24, series_ids=None):
     if series_ids is None:
         series_ids = [f"S{i}" for i in range(n_series)]
     dates = pd.date_range("2000-01-01", periods=n_periods, freq="MS")
-    data = {sid: np.arange(1, n_periods + 1, dtype=float) * (i + 1)
-            for i, sid in enumerate(series_ids)}
+    data = {
+        sid: np.arange(1, n_periods + 1, dtype=float) * (i + 1)
+        for i, sid in enumerate(series_ids)
+    }
     df = pd.DataFrame(data, index=dates)
     df.index.name = "Date"
     df = df.reset_index()  # move DatetimeIndex → "Date" column
@@ -58,6 +61,7 @@ def _make_synthetic_df(n_series=3, n_periods=24, series_ids=None):
 # ===========================================================================
 # Unit tests — load_data_pandas (no real files needed)
 # ===========================================================================
+
 
 def test_load_data_pandas_output_shapes():
     """X, Time, Z must have consistent shapes after load_data_pandas."""
@@ -140,6 +144,7 @@ def test_load_data_pandas_column_ordering():
 # Integration tests — run_with_dataframe (require sample data files)
 # ===========================================================================
 
+
 @needs_sample_data
 def _load_vintage_as_dataframe():
     """Helper: load the sample vintage Excel file as a DataFrame."""
@@ -185,13 +190,17 @@ def test_run_with_dataframe_matches_file_pipeline(pipeline_result):
         df, Spec, date_col="Date", sample=options.sample_start
     )
 
-    assert X_df.shape == X_ref.shape, "Shape mismatch between DataFrame and file pipeline"
+    assert (
+        X_df.shape == X_ref.shape
+    ), "Shape mismatch between DataFrame and file pipeline"
 
     # Values must agree where both are non-NaN
     mask = ~np.isnan(X_df) & ~np.isnan(X_ref)
     np.testing.assert_allclose(
-        X_df[mask], X_ref[mask], rtol=1e-9,
-        err_msg="DataFrame and file-based pipelines produced different transformed data"
+        X_df[mask],
+        X_ref[mask],
+        rtol=1e-9,
+        err_msg="DataFrame and file-based pipelines produced different transformed data",
     )
 
 
@@ -218,6 +227,6 @@ def test_run_with_dataframe_loglik_finite():
     loglik = result_obj.result["loglik"]
 
     assert len(loglik) > 1
-    assert all(np.isfinite(v) for v in loglik[1:]), (
-        "Non-finite log-likelihood — numerical instability in EM via DataFrame path"
-    )
+    assert all(
+        np.isfinite(v) for v in loglik[1:]
+    ), "Non-finite log-likelihood — numerical instability in EM via DataFrame path"

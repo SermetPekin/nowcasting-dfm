@@ -10,9 +10,11 @@ from typing import Any
 from pathlib import Path
 import pandas as pd
 from typing import Tuple, Optional, Union
-import numpy as np 
-# 
+import numpy as np
+
+#
 from dfm_sp.sp_utils import get_latest
+
 
 # ===================================== FrozenOptions =================================
 @dataclass(frozen=True)
@@ -57,7 +59,9 @@ class Options:
     sample_start: str = "2000-01-01"
     vintage: Optional[str] = "auto"
     data_folder: Optional[str] = None
-    data_file_name_format : Optional[callable] = None  # e.g. lambda options : f"{options.vintage}-snap.xls" 
+    data_file_name_format: Optional[callable] = (
+        None  # e.g. lambda options : f"{options.vintage}-snap.xls"
+    )
     out_folder: Union[Path, str] = Path(".")
     use_cache: bool = True
     use_numba: bool = False
@@ -75,7 +79,7 @@ class Options:
             self.root = Path(self.root)
         if self.data_folder is None:
             self.data_folder = self.root / "data" / self.country
-            
+
         if isinstance(self.spec_file_name, str):
             self.spec_file_name = self.root / self.spec_file_name
         if isinstance(self.sample_start, str):
@@ -173,8 +177,8 @@ class ResultObject:
     spec: Any
     options: Options
 
-    def write(self, filename=None) : 
-        if filename is None : 
+    def write(self, filename=None):
+        if filename is None:
             filename = f"Results-{self.options.country}-Vintage[{self.options.vintage_date}].xlsx"
         with pd.ExcelWriter(filename) as writer:
             self.info().to_excel(writer, sheet_name="Info", index=False)
@@ -182,7 +186,7 @@ class ResultObject:
                 if isinstance(v, np.ndarray):
                     d = pd.DataFrame(v)
                     d.to_excel(writer, sheet_name=str(k))
-                    
+
     def info(self):
         template = """
     #   Res - structure of model results with the following fields
@@ -209,5 +213,5 @@ class ResultObject:
     #       .r: Number of common factors for each block
     #       .p: Number of lags in transition equation
         """
-        lines = [line.strip() for line in template.split('\n') if line.strip()]
+        lines = [line.strip() for line in template.split("\n") if line.strip()]
         return pd.DataFrame(lines, columns=["Info"])

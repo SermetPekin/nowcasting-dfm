@@ -21,7 +21,6 @@ from scipy.stats import norm
 from dfm_sp.sp_classes import Options, ResultObject
 from dfm_sp.sp_utils import get_attr_from_spec
 
-
 # ---------------------------------------------------------------------------
 # Data transformation plots
 # ---------------------------------------------------------------------------

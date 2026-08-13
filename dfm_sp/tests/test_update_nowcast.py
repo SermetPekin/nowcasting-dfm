@@ -13,16 +13,14 @@ in the sample dataset.  All tests are skipped when the data files are absent.
 import numpy as np
 import pandas as pd
 import pytest
-import tempfile
-import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-SPEC_FILE    = PROJECT_ROOT / "Spec_US_example.xls"
-VINTAGE_OLD  = "2016-12-16"
-VINTAGE_NEW  = "2016-12-23"
-DATA_OLD     = PROJECT_ROOT / "data" / "US" / f"{VINTAGE_OLD}.xls"
-DATA_NEW     = PROJECT_ROOT / "data" / "US" / f"{VINTAGE_NEW}.xls"
+SPEC_FILE = PROJECT_ROOT / "Spec_US_example.xls"
+VINTAGE_OLD = "2016-12-16"
+VINTAGE_NEW = "2016-12-23"
+DATA_OLD = PROJECT_ROOT / "data" / "US" / f"{VINTAGE_OLD}.xls"
+DATA_NEW = PROJECT_ROOT / "data" / "US" / f"{VINTAGE_NEW}.xls"
 
 _has_data = SPEC_FILE.exists() and DATA_OLD.exists() and DATA_NEW.exists()
 needs_data = pytest.mark.skipif(
@@ -38,6 +36,7 @@ TARGET_PERIOD = "2016q4"
 # ---------------------------------------------------------------------------
 # Session fixture — run sp_update_nowcast once, share across all tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture(scope="module")
 def update_result():
@@ -76,6 +75,7 @@ def update_result():
 # Tests for result_dict structure
 # ---------------------------------------------------------------------------
 
+
 @needs_data
 def test_result_dict_has_required_keys(update_result):
     """sp_update_nowcast must return a dict with all documented keys."""
@@ -112,9 +112,9 @@ def test_news_table_numeric_values(update_result):
     """Forecast, Actual, Weight, and Impact columns must all be numeric."""
     news = update_result["news_table"]
     for col in ("Forecast", "Actual", "Weight", "Impact"):
-        assert pd.api.types.is_numeric_dtype(news[col]), (
-            f"Column '{col}' is not numeric"
-        )
+        assert pd.api.types.is_numeric_dtype(
+            news[col]
+        ), f"Column '{col}' is not numeric"
 
 
 @needs_data
@@ -122,14 +122,15 @@ def test_news_table_impact_finite(update_result):
     """Impact values must all be finite (no NaN / Inf)."""
     impacts = update_result["news_table"]["Impact"].dropna()
     assert len(impacts) > 0
-    assert np.all(np.isfinite(impacts.values)), (
-        "Non-finite Impact values found in news_table"
-    )
+    assert np.all(
+        np.isfinite(impacts.values)
+    ), "Non-finite Impact values found in news_table"
 
 
 # ---------------------------------------------------------------------------
 # Tests for data_released
 # ---------------------------------------------------------------------------
+
 
 @needs_data
 def test_data_released_is_boolean_array(update_result):
@@ -152,15 +153,16 @@ def test_data_released_has_at_least_one_release(update_result):
 # Tests for real_impacts (subset of news_table)
 # ---------------------------------------------------------------------------
 
+
 @needs_data
 def test_real_impacts_is_subset_of_news_table(update_result):
     """real_impacts rows must all appear in news_table."""
     news = update_result["news_table"]
     real = update_result["real_impacts"]
     assert isinstance(real, pd.DataFrame)
-    assert set(real.index).issubset(set(news.index)), (
-        "real_impacts contains series not present in news_table"
-    )
+    assert set(real.index).issubset(
+        set(news.index)
+    ), "real_impacts contains series not present in news_table"
 
 
 @needs_data
@@ -168,14 +170,15 @@ def test_real_impacts_size_matches_data_released(update_result):
     """Number of real_impacts rows must equal number of released series."""
     n_released = update_result["data_released"].sum()
     n_real = len(update_result["real_impacts"])
-    assert n_real == n_released, (
-        f"real_impacts has {n_real} rows but {n_released} series were released"
-    )
+    assert (
+        n_real == n_released
+    ), f"real_impacts has {n_real} rows but {n_released} series were released"
 
 
 # ---------------------------------------------------------------------------
 # Test for write_result_dict
 # ---------------------------------------------------------------------------
+
 
 @needs_data
 def test_write_result_dict_creates_excel_with_sheets(update_result, tmp_path):
@@ -194,7 +197,9 @@ def test_write_result_dict_creates_excel_with_sheets(update_result, tmp_path):
 
 
 @needs_data
-def test_write_result_dict_real_impacts_sorted_by_absolute_impact(update_result, tmp_path):
+def test_write_result_dict_real_impacts_sorted_by_absolute_impact(
+    update_result, tmp_path
+):
     """Real Impacts sheet must be sorted descending by absolute impact."""
     from dfm_sp.sp_update_nowcast_ import write_result_dict
 
@@ -204,14 +209,15 @@ def test_write_result_dict_real_impacts_sorted_by_absolute_impact(update_result,
     df = pd.read_excel(str(out_file) + ".xlsx", sheet_name="Real Impacts", index_col=0)
     if len(df) > 1:
         abs_impacts = df["Impact"].abs().values
-        assert np.all(abs_impacts[:-1] >= abs_impacts[1:]), (
-            "Real Impacts sheet is not sorted by absolute impact (descending)"
-        )
+        assert np.all(
+            abs_impacts[:-1] >= abs_impacts[1:]
+        ), "Real Impacts sheet is not sorted by absolute impact (descending)"
 
 
 # ---------------------------------------------------------------------------
 # Column order invariance
 # ---------------------------------------------------------------------------
+
 
 @needs_data
 def test_column_order_does_not_affect_transformed_data():
@@ -242,7 +248,9 @@ def test_column_order_does_not_affect_transformed_data():
     # Compare where both are non-NaN
     mask = ~np.isnan(X_ref) & ~np.isnan(X_shuf)
     np.testing.assert_allclose(
-        X_ref[mask], X_shuf[mask], rtol=1e-12,
+        X_ref[mask],
+        X_shuf[mask],
+        rtol=1e-12,
         err_msg="Transformed data differs when input column order is shuffled",
     )
 
@@ -265,6 +273,8 @@ def test_reversed_column_order_does_not_affect_transformed_data():
 
     mask = ~np.isnan(X_ref) & ~np.isnan(X_rev)
     np.testing.assert_allclose(
-        X_ref[mask], X_rev[mask], rtol=1e-12,
+        X_ref[mask],
+        X_rev[mask],
+        rtol=1e-12,
         err_msg="Transformed data differs when input column order is reversed",
     )

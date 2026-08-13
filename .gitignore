@@ -10,6 +10,7 @@ __pycache__/
 
 --*.*
 
+Results*.xlsx 
 
 # Build artifacts
 dist/

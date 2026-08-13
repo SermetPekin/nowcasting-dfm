@@ -5,7 +5,6 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
-import os
 import pickle
 from pathlib import Path
 from typing import Optional, Tuple
@@ -76,13 +75,13 @@ def get_with_options(
     verbose = options.get_verbose(verbose)
 
     Spec: LoadSpec = LoadSpec(options.spec_file_name)
-    
-    if callable(options.data_file_name_format) : 
-        datafile : Path  = options.data_folder / options.data_file_name_format(options) 
-    else : 
-        datafile : Path = options.data_folder / (options.vintage_date + ".xls" )   
-    if not datafile.suffix : 
-        datafile = datafile.with_suffix(".xls")  
+
+    if callable(options.data_file_name_format):
+        datafile: Path = options.data_folder / options.data_file_name_format(options)
+    else:
+        datafile: Path = options.data_folder / (options.vintage_date + ".xls")
+    if not datafile.suffix:
+        datafile = datafile.with_suffix(".xls")
     if not datafile.exists():
         raise FileNotFoundError(str(datafile))
     X, Time, Z = load_data(datafile, Spec, options.sample_start)

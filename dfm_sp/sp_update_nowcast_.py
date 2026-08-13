@@ -5,8 +5,10 @@ Copyright (c) 2026, Sermet Pekin (extensions and modernisation)
 
 """
 
+from typing import Any, Dict
 import numpy as np
-import pandas as pd 
+import pandas as pd
+from pathlib import Path
 
 from dfm_sp.core.update_Nowcast import update_nowcast
 from dfm_sp.sp_classes import Options
@@ -19,7 +21,9 @@ cache_ = CacheHandler(cache_dir=CACHE_DIR)
 cache_.enable_persistent(True)
 
 
-def sp_update_nowcast(options, new_date: str, series: str, period: str, show=True, write=True):
+def sp_update_nowcast(
+    options: Options, new_date: str, series: str, period: str, show=True, write=True
+) -> Dict[str, Any]:
 
     vintage_old = options.vintage_date
     vintage_new = new_date
@@ -44,13 +48,13 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
 
     if not np.any(data_released):
         raise ValueError("No new Data! [Line 45]")
-            
-    real_impacts : pd.DataFrame = news_table.iloc[np.where(data_released)[0], :]
+
+    real_impacts: pd.DataFrame = news_table.iloc[np.where(data_released)[0], :]
     print(real_impacts)
-    
-    if real_impacts.empty : 
+
+    if real_impacts.empty:
         raise ValueError(" No forecast was made ")
-        
+
     fig = plot_news_waterfall(
         news_table=real_impacts,
         y_old=y_old,
@@ -62,29 +66,36 @@ def sp_update_nowcast(options, new_date: str, series: str, period: str, show=Tru
     if show:
         fig.show()
 
-    result_dict =  {
+    result_dict = {
         "fig": fig,
         "real_impacts": real_impacts,
         "data_released": data_released,
         "news_table": news_table,
     }
-    if write : 
-        file_name = f"[Nowcast Update]-impacts-{options.country}-{vintage_new}-from-{vintage_old}.xlsx"
+    if write:
+        file_name = (
+            options.out_folder
+            / f"[Nowcast Update]-impacts-{options.country}-{vintage_new}-from-{vintage_old}.xlsx"
+        )
         write_result_dict(result_dict, file_name)
     return result_dict
 
-def write_result_dict(result_dict:dict, file_name = "out_impacts"):
-    """write outputs of update nowcast """
+
+def write_result_dict(result_dict: dict, file_name: Path = "out_impacts"):
+    """write outputs of update nowcast"""
     data_released = pd.DataFrame(result_dict["data_released"])
     news_table = result_dict["news_table"]
-    real_impacts = result_dict["real_impacts"] 
-    real_impacts['Absolute Impact'] = real_impacts['Impact'].abs()   
-    real_impacts = real_impacts.sort_values(by='Absolute Impact', ascending=False)
-    
-    with pd.ExcelWriter(f"{file_name}.xlsx", engine="openpyxl") as writer:
+    real_impacts = result_dict["real_impacts"]
+    real_impacts["Absolute Impact"] = real_impacts["Impact"].abs()
+    real_impacts = real_impacts.sort_values(by="Absolute Impact", ascending=False)
+    file_name = Path(file_name)
+    if file_name.suffix != ".xlsx":
+        file_name = file_name.with_suffix(".xlsx")
+    with pd.ExcelWriter(file_name, engine="openpyxl") as writer:
         data_released.to_excel(writer, sheet_name="Data Released", index=True)
         news_table.to_excel(writer, sheet_name="News Table", index=True)
         real_impacts.to_excel(writer, sheet_name="Real Impacts", index=True)
+
 
 def _usage():
     series = "GDPC1"
