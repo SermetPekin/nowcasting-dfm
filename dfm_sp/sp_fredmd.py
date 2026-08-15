@@ -22,7 +22,6 @@ https://www.stlouisfed.org/research/economists/mccracken/fred-databases
 
 from __future__ import annotations
 
-import re
 import shutil
 import subprocess
 import warnings
@@ -166,6 +165,10 @@ def _apply_tcode(series: pd.Series, tcode: int) -> pd.Series:
             return series
 
 
+# McCracken & Ng tcode → closest DFM transformation code
+_TCODE_TO_DFM = {1: "lin", 2: "chg", 3: "chg", 4: "log", 5: "dln", 6: "d2l", 7: "pch"}
+
+
 def _build_spec(series_names: List[str], tcodes: np.ndarray, frequency: str) -> LoadSpec:
     """Construct a LoadSpec with a single global factor block."""
     N = len(series_names)
@@ -183,40 +186,231 @@ def _build_spec(series_names: List[str], tcodes: np.ndarray, frequency: str) -> 
     return LoadSpec(config)
 
 
+def _export_spec_xlsx(
+    series_names: List[str],
+    tcodes: np.ndarray,
+    path: str,
+    frequency: str,
+) -> None:
+    """Write a Spec Excel file matching the Spec_US_example.xls layout."""
+    N = len(series_names)
+    df = pd.DataFrame({
+        "Model": 1,
+        "SeriesID": series_names,
+        "SeriesName": series_names,
+        "Frequency": frequency,
+        "Block1-Global": 1,
+        # native FRED-MD transformation mapped to DFM code; edit to taste
+        "Transformation": [_TCODE_TO_DFM.get(int(tc), "lin") for tc in tcodes],
+        "Units": [FREDMD_TCODE_LABELS.get(int(tc), "") for tc in tcodes],
+        "Category": "FRED-MD",
+    })
+    df.to_excel(path, index=False)
+
+
+def export_fredmd_spec(
+    vintage: str = "current",
+    series: Optional[List[str]] = None,
+    path: Optional[str] = None,
+    quarterly: bool = False,
+    proxy: Optional[str] = None,
+) -> str:
+    """Download a FRED-MD vintage and export an editable Spec Excel file.
+
+    The file follows the same column layout as ``Spec_US_example.xls`` so it
+    can be loaded directly by ``LoadSpec``. Edit block columns and series rows
+    before passing the file to ``get_with_options()`` or ``LoadSpec()``.
+
+    Parameters
+    ----------
+    vintage : str
+        ``"YYYY-MM"`` or ``"current"`` (default).
+    series : list of str, optional
+        Subset of FRED-MD series IDs to include. All ~130 series when ``None``.
+    path : str, optional
+        Destination file path. Defaults to ``Spec_FredMD_{vintage}.xlsx`` in
+        the current directory.
+    quarterly : bool
+        If ``True``, use FRED-QD instead of FRED-MD.
+    proxy : str, optional
+        HTTP/HTTPS proxy URL.
+
+    Returns
+    -------
+    str
+        Absolute path of the written file.
+
+    Examples
+    --------
+    >>> path = export_fredmd_spec("2026-07", series=["INDPRO", "PAYEMS", "UNRATE"])
+    >>> print(f"Edit the spec at: {path}")
+    """
+    from pathlib import Path
+
+    url = _resolve_url(vintage, quarterly)
+    content = _fetch_csv(url, proxy)
+    _validate_csv(content, url)
+    raw_df, tcodes, all_series = _parse_csv(content)
+
+    if series is not None:
+        missing = [s for s in series if s not in all_series]
+        if missing:
+            raise ValueError(f"Series not in FRED-MD file: {missing}")
+        idx = [all_series.index(s) for s in series]
+        selected = list(series)
+        tcodes = tcodes[idx]
+    else:
+        selected = list(all_series)
+
+    # resolve vintage label for the default filename
+    if vintage.lower() == "current":
+        label = fredmd_current_vintage(quarterly=quarterly, proxy=proxy)
+    else:
+        label = vintage[:7]
+
+    frequency = "q" if quarterly else "m"
+    dest = path or f"Spec_FredMD_{label}.xlsx"
+    dest = str(Path(dest).resolve())
+    _export_spec_xlsx(selected, tcodes, dest, frequency)
+    print(f"[FRED-MD] Spec written to: {dest}")
+    return dest
+
+
+def export_fredmd_data(
+    vintage: str = "current",
+    series: Optional[List[str]] = None,
+    sample_start: Optional[str] = None,
+    path: Optional[str] = None,
+    quarterly: bool = False,
+    proxy: Optional[str] = None,
+) -> str:
+    """Download a FRED-MD vintage, apply McCracken & Ng transformations, and
+    save the result as an Excel file compatible with the standard ``load_data``
+    pipeline.
+
+    The saved file has a ``Date`` column followed by one column per series ID.
+    Because the data is already stationary, the matching Spec file (produced by
+    ``export_fredmd_spec``) should keep ``Transformation = lin`` so the DFM
+    does not transform the data a second time.
+
+    Parameters
+    ----------
+    vintage : str
+        ``"YYYY-MM"`` or ``"current"`` (default).
+    series : list of str, optional
+        Subset of FRED-MD series IDs to include. All ~130 series when ``None``.
+    sample_start : str, optional
+        Drop observations before this date, e.g. ``"2000-01-01"``.
+    path : str, optional
+        Destination file path. Defaults to ``FredMD_{vintage}.xlsx``.
+    quarterly : bool
+        If ``True``, use FRED-QD instead of FRED-MD.
+    proxy : str, optional
+        HTTP/HTTPS proxy URL.
+
+    Returns
+    -------
+    str
+        Absolute path of the written file.
+
+    Examples
+    --------
+    >>> data_path = export_fredmd_data("2026-07", series=["INDPRO", "PAYEMS"])
+    >>> spec_path = export_fredmd_spec("2026-07", series=["INDPRO", "PAYEMS"])
+    >>> from dfm_sp.core.load_spec import LoadSpec
+    >>> from dfm_sp.core.load_data import load_data
+    >>> Spec = LoadSpec(spec_path)
+    >>> X, Time, Z = load_data(data_path, Spec, sample_start="2000-01-01")
+    """
+    from pathlib import Path
+
+    url = _resolve_url(vintage, quarterly)
+    print(f"[FRED-MD] Downloading vintage '{vintage}'...")
+    content = _fetch_csv(url, proxy)
+    _validate_csv(content, url)
+    raw_df, tcodes, all_series = _parse_csv(content)
+
+    if series is not None:
+        missing = [s for s in series if s not in all_series]
+        if missing:
+            raise ValueError(f"Series not in FRED-MD file: {missing}")
+        idx = [all_series.index(s) for s in series]
+        selected = list(series)
+        tcodes = tcodes[idx]
+        raw_df = raw_df[selected]
+    else:
+        selected = list(all_series)
+
+    # apply transformations — result is stationary panel ready for DFM
+    X_df = raw_df.copy()
+    for col, tc in zip(selected, tcodes):
+        X_df[col] = _apply_tcode(raw_df[col], tc)
+
+    max_lags = int(max(
+        2 if tc in (3, 6) else 1 if tc in (2, 4, 5, 7) else 0
+        for tc in tcodes
+    ))
+    X_df = X_df.iloc[max_lags:]
+
+    if sample_start is not None:
+        X_df = X_df[X_df.index >= pd.Timestamp(sample_start)]
+
+    if vintage.lower() == "current":
+        label = fredmd_current_vintage(quarterly=quarterly, proxy=proxy)
+    else:
+        label = vintage[:7]
+
+    dest = path or f"FredMD_{label}.xlsx"
+    dest = str(Path(dest).resolve())
+
+    # write in the same Date + series-columns layout as the native data files
+    out = X_df.reset_index().rename(columns={X_df.index.name or "sasdate": "Date"})
+    out.to_excel(dest, index=False)
+    print(f"[FRED-MD] Transformed data written to: {dest}")
+    return dest
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
 
-_FREDMD_PAGE = "https://www.stlouisfed.org/research/economists/mccracken/fred-databases"
-
-
 def fredmd_current_vintage(quarterly: bool = False, proxy: Optional[str] = None) -> str:
-    """Return the ``"YYYY-MM"`` release label for the current FRED-MD vintage.
+    """Return the ``"YYYY-MM"`` release label for the most recent available vintage.
 
-    Scraped from the St. Louis Fed database page, where the ``current.csv``
-    link explicitly maps to the dated file (e.g. ``2026-07-md.csv``).
-    Use the returned string directly in output file names.
+    Probes the direct CSV URLs for the current and previous months rather than
+    scraping the Fed landing page, which is more reliable.
 
     Examples
     --------
     >>> v = fredmd_current_vintage()          # e.g. "2026-07"
     >>> result.write(f"Results-FredDb-{v}")
     """
-    freq_tag = "qd" if quarterly else "md"
-    pattern = re.compile(rf"(?:monthly|quarterly)/(\d{{4}}-\d{{2}})-{freq_tag}\.csv")
+    from datetime import date
 
-    curl = shutil.which("curl")
-    if curl:
-        cmd = [curl, "-sL", "--max-time", "15", _FREDMD_PAGE]
-        if proxy:
-            cmd += ["--proxy", proxy]
-        result = subprocess.run(cmd, capture_output=True, timeout=20)
-        if result.returncode == 0:
-            m = pattern.search(result.stdout.decode("utf-8", errors="replace"))
-            if m:
-                return m.group(1)
+    freq_tag = "qd" if quarterly else "md"
+    template = _FREDQD_URL if quarterly else _FREDMD_URL
+
+    today = date.today()
+    # FRED-MD is typically released in the first week of the month for the
+    # previous month's data; probe up to 4 months back to find the latest.
+    for delta in range(4):
+        year = today.year
+        month = today.month - delta
+        while month < 1:
+            month += 12
+            year -= 1
+        ym = f"{year:04d}-{month:02d}"
+        url = template.format(vintage=ym)
+        try:
+            content = _fetch_csv(url, proxy=proxy)
+            first = content.lstrip()[:10].lower()
+            if not (first.startswith("<!") or first.startswith("<html")):
+                return ym
+        except Exception:
+            continue
 
     raise RuntimeError(
-        "Could not determine the current FRED-MD vintage from the St. Louis Fed page."
+        "Could not determine the current FRED-MD vintage. "
+        "Check your internet connection or pass the vintage explicitly."
     )
 
 
